@@ -1,7 +1,6 @@
 import React, { createContext } from "react";
 import Models from "../components/Models";
 
-type Product = Models['Product'];
 type Clothing = Models['Clothing'];
 type Shoes = Models['Shoes'];
 

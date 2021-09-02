@@ -4,11 +4,11 @@ type ShoesType = Models['Shoes'];
 
 
 interface ShoesProps{
-    shoes: ShoesType;
-    onDelete: (id: number) => void;
+    shoe: ShoesType;
+    onDelete?: (id: number) => void;
 }
 
-const Shoe: React.FC<ShoesProps> = ({shoes, onDelete}) => {
+const Shoe: React.FC<ShoesProps> = ({shoe, onDelete}) => {
 
     return (
         // <div className='card'>
@@ -39,10 +39,10 @@ const Shoe: React.FC<ShoesProps> = ({shoes, onDelete}) => {
         //   </div>
         // </div>
         <div className='cardr'>
-            <img src={shoes.img} alt="Denim Jeans" style={{width:'90%'}}/>
-            <span>{shoes.name}</span>
-            <span className="price">${shoes.price}</span>
-            {/* <span>{shoes.details}</span> */}
+            <img src={shoe.img} alt="Denim Jeans" style={{width:'90%'}}/>
+            <span style={{paddingTop:'20px'}}>{shoe.name}</span>
+            <span className="price">${shoe.price}</span>
+            {/* <span>{shoe.details}</span> */}
             <p><button><i style={{paddingRight: '15px'}} className="fa fa-shopping-cart"></i>Add to Cart</button></p>
         </div>
 

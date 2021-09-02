@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import "../App.css";
+import { isAdmin, isAuthenticated } from '../service/AuthService';
 
 const Navigation: React.FC = () => {
+
+
   return (
     <>
       <nav
@@ -9,8 +12,8 @@ const Navigation: React.FC = () => {
         aria-label="Fifth navbar example"
       >
         <div className="container-fluid">
-          <Link className="navbar-brand" to="#">
-            Web Shop
+          <Link className="navbar-brand" style={{pointerEvents: 'none'}} to="#">
+            Shopify
           </Link>
           <button
             className="navbar-toggler"
@@ -27,43 +30,25 @@ const Navigation: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarsExample05">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/">
+                <Link className="nav-link active" aria-current="page" to="/">
                   Home
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
+                {isAuthenticated() ? 
+                  <Link className="nav-link" to="/user-dashboard">
+                    Dashboard
+                  </Link>
+                :
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>}
               </li>
-              {/* <li className="nav-item dropdown">
-                <Link
-                  className="nav-link dropdown-toggle"
-                  to="#"
-                  id="dropdown05"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Dropdown
-                </Link>
-                <ul className="dropdown-menu" aria-labelledby="dropdown05">
-                  <li>
-                    <Link className="dropdown-item" to="#">
-                      Action
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="#">
-                      Another action
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="#">
-                      Something else here
-                    </Link>
-                  </li>
-                </ul>
-              </li> */}
+            </ul>
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0 flex-fill justify-content-center" >
+              <li className="nav-item">
+                {isAdmin() && <a className="nav-link" style={{color: 'royalblue',pointerEvents: 'none'}} >ADMIN MODE</a>}
+              </li>
             </ul>
             {/* <form>
               <input

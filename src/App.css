@@ -118,9 +118,33 @@ float: center;
 ******* Cards *******
 **************************/
 
+.cards-filtered{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 1rem;
+  padding-left: 20vw;
+  width: 80vw;
+  height: 50vh;
+}
+
+@media (max-width: 700px) {
+  .cards-filtered {
+    padding-left: 20vw;
+    width: 80vw;
+    height: 80vh;
+    grid-template-columns: auto auto;
+  }
+}
+
+@media (max-width: 500px) {
+  .cards-filtered {
+    grid-template-columns: 1fr;
+  }
+}
+
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: auto auto auto;
   gap: 1rem;
   width: 70vw;
   height: 50vh;
@@ -131,7 +155,7 @@ float: center;
     padding-left: 20vw;
     width: 80vw;
     height: 80vh;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: auto auto;
   }
 }
 
@@ -171,7 +195,7 @@ float: center;
 .price {
   color: grey;
   font-size: 26px;
-  padding-bottom: 10px;
+  padding-bottom: 10px ;
 }
 
 .cardr button {

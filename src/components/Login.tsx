@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import { useState, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import Models from "./Models";
 import { apiRoot } from "../App";
+import jwtDecode from "jwt-decode";
+import { setUserLocal, setTokenLocal, getToken } from "../service/StorageService";
 
 
 type User = Models['User'];
@@ -13,39 +15,45 @@ const Login = () => {
     const [user, setUser] = useState<User | null | undefined>(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("");
 
-    let allUsers: User[] | null = null;
+    const history = useHistory();
+
+    const [allUsers, setAllUsers] = useState<User[] | null>();
     let userAuthentication: UserAuthentication;
 
-    useLayoutEffect(() =>{
+    useEffect(() =>{
+        const fetchData = async () =>{
+            let res = await axios.get(`${apiRoot}/user`);
+            setAllUsers(await res.data);
         
-        sessionStorage.getItem("username") == "Lima" ? setRole("Admin") : setRole("User");
+            // console.table(allUsers);
+        }
 
-    }, [])
-    
+        fetchData();        
+    }, [getToken()])
+
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
- 
+
         try{   
-            // let res = await axios.get(`${apiRoot}/user`);
-            // allUsers = await res.data;
-
-            // console.table(allUsers);
-
-            // let currentUser: User | null | undefined = allUsers!.find(x => x.username === username);
-
-            // setUser(currentUser);
-
-            // console.table(user);
 
             const resToken = await axios.post(apiRoot + "/api/authenticate", { username, password });
-            // setUser(resToken.data);
+ 
             userAuthentication = resToken.data;
+            
+            const userito = jwtDecode(userAuthentication.jwtToken.token);
+            
+            console.log(userito)
+            
+            setTokenLocal(userAuthentication.jwtToken.token);
+            setUserLocal(userito);
+            
+            history.push('/user-dashboard');
 
-            sessionStorage.setItem("token", userAuthentication.jwtToken.token);
-            sessionStorage.setItem("username", username);
-            // sessionStorage.setItem("username", user?.authorities);
+            
+
+            // localStorage.setItem("username", user?.authorities);
             
             // const resUser = await axios.get("http://localhost:8080/api/user/current-user");
             // setUser(resUser.data);
@@ -56,26 +64,22 @@ const Login = () => {
         }
     }
 
-    const logout = () => {
-        console.log(sessionStorage.getItem("token"));
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("username");
-    }
-
 
     return(
-        <>
-        {sessionStorage.getItem('token') ? (    
-                <>
-                {/* <button onClick={() => isus()}>klsdfjlksdjflkjsdf</button> */}
-                    <p>Welcome <b>{sessionStorage.username}</b> to the <b>{role}</b> dashboard! </p>
-                    <button className="btn btn-danger" onClick={logout}>Logout</button>
-                    <br />
-                    <br />
-                    <Link to='/'>Go Back</Link>
-
-                </>
-            ): (
+        // <>
+        // {getToken().length > 2 ? (    
+        //         // <Route path='/dash' component={UserDashboard} />
+        //         <Route path='/dash' render={( props ) => ( 
+        //             <>
+        //                 <p>Welcome <b>{JSON.parse(getUser()).sub}</b> to the <b>{JSON.parse(getUser()).auth}</b> dashboard! </p>
+        //                 <button className="btn btn-danger" onClick={() => logout()}>Logout</button>
+        //                 <br />
+        //                 <br />
+        //                 <Link to='/'>Go Back</Link>
+        //             </>
+        //         )}>
+        //         </Route>
+        //     ): (
                 <section className="vh-100" style={{backgroundColor: '#9A616D'}}>
                     <div className="container py-5 h-100">
                         <div className="row d-flex justify-content-center align-items-center h-100">
@@ -130,8 +134,8 @@ const Login = () => {
                         </div>
                     </div>
                 </section>
-            )}
-        </>
+        //     )}
+        // </>
     )
 }
 

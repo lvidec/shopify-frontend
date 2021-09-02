@@ -1,5 +1,4 @@
-import { EnumDeclaration } from "typescript";
-import { Role, Sex } from "./Enums";
+import { Sex } from "./Enums";
 
 
 export default interface Models{

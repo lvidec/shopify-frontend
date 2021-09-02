@@ -1,11 +1,8 @@
-import React, { useContext, useCallback } from 'react'
+import { useContext, useCallback } from 'react'
 import { CartContext } from '../service/CartContext';
-import Models from './Models';
 import Category from './Category';
 
-
 const Filters = () => {
-
 
     const {clothingContext, setClothingContext, shoesContext, setShoesContext} = useContext(CartContext);
 
@@ -17,6 +14,7 @@ const Filters = () => {
         shoesContext.forEach(shoes => brandNames.push(shoes.brandName))
         return [...new Set(brandNames)];
     }, [clothingContext, shoesContext]);
+
 
 
     return (

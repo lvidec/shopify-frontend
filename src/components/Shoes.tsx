@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { ajax } from "rxjs/ajax";
 import Models from "./Models";
-import {BehaviorSubject} from "rxjs";
 import { apiRoot } from "../App";
 import Shoe from "./Shoe";
 import { Sex } from "./Enums";
@@ -76,8 +75,8 @@ const Shoes: React.FC = () => {
     return ( 
         <>
             {/* <button onClick={() => addShoes(cloth)}>clickni me mofo</button> */}
-            {shoesContext.map((shoes: ShoesType, index: number) =>(
-                <Shoe key={index} shoes={shoes} onDelete={deleteShoes}/>
+            {shoesContext.map((shoe: ShoesType, index: number) =>(
+                <Shoe key={index} shoe={shoe} onDelete={deleteShoes}/>
             ))}
         </>
     )

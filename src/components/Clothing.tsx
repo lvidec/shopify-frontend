@@ -1,12 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { ajax } from "rxjs/ajax";
 import Models from "./Models";
-import {BehaviorSubject} from "rxjs";
 import { apiRoot } from "../App";
 import Clothes from "./Clothes";
 import { Sex } from "./Enums";
 import { CartContext } from "../service/CartContext";
-
 
 const Clothing: React.FC = () => {
     
@@ -17,7 +15,6 @@ const Clothing: React.FC = () => {
     const {clothingContext, setClothingContext, shoesContext, setShoesContext} = useContext(CartContext);
 
 
-
     useEffect(() => {
         const subscription = ajax.getJSON(apiRoot + '/clothing').subscribe((res: any) =>{
             setClothingContext(res);
@@ -26,17 +23,6 @@ const Clothing: React.FC = () => {
         return () => subscription.unsubscribe();
 
     }, [setClothingContext])
-
-
-    // function isClothing(product: any): product is Clothing {
-    //     return true;
-    // }
-    // function isShoes(product: any): product is Shoes {
-    //     return true;
-    // }
-    // function isProduct(product: any): product is Product {
-    //     return true;
-    // }
     
 
     const getClothing = () => {
