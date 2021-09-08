@@ -1,7 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Models from "./Models";
+import Models from "../helpers/Models";
 import { apiRoot } from "../App";
 import jwtDecode from "jwt-decode";
 import { setUserLocal, setTokenLocal, getToken } from "../service/StorageService";
@@ -108,14 +108,20 @@ const Login = () => {
                                     <div className="form-outline mb-4">
                                         <input type="text" id="form2Example17" className="form-control form-control-lg" 
                                         onChange={ (e) => setUsername(e.target.value)}  />
+
+                                        <span style={{color: 'grey', fontSize: '0.8rem'}}>Edi (User) &nbsp;&nbsp;&nbsp;&nbsp;</span>
                                         <label className="form-label" >Username</label>
+                                        <span style={{color: 'grey', fontSize: '0.8rem'}}> &nbsp;&nbsp; Lima (Admin)</span> <br />
+
                                     </div>
 
                                     <div className="form-outline mb-4">
                                         <input type="text" id="form2Example27" className="form-control form-control-lg" 
                                         onChange={ (e) => setPassword(e.target.value)}  />
-                                        <label className="form-label">Password</label>
-                                    </div>
+                                        
+                                        <span style={{color: 'grey', fontSize: '0.8rem'}}>Edi &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <label className="form-label" >Password</label>
+                                        <span style={{color: 'grey', fontSize: '0.8rem'}}> &nbsp;&nbsp; Lima </span> <br />                                    </div>
 
                                     <div className="pt-1 mb-4">
                                         <button className="btn btn-dark btn-lg btn-block" type="submit">Login</button>

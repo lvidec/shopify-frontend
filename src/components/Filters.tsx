@@ -1,5 +1,5 @@
 import { useContext, useCallback } from 'react'
-import { CartContext } from '../service/CartContext';
+import { CartContext } from '../helpers/CartContext';
 import Category from './Category';
 
 const Filters = () => {

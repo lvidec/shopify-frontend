@@ -168,8 +168,6 @@ float: center;
 .cardr {
   display: grid;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  /* width: 300px; */
-  /* height: 450px; */
   margin: auto;
   text-align: center;
   font-family: arial;
@@ -177,7 +175,6 @@ float: center;
 }
 
 .cardr span{
-  margin-bottom: ;
   font-size: 15px;
   display: inline; 
   overflow: hidden;
@@ -347,3 +344,4 @@ a:focus {
 	height: 0;
 	z-index: -2;
 }
+

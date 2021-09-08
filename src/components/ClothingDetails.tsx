@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
-import { CartContext } from '../service/CartContext';
+import { CartContext } from '../helpers/CartContext';
 import Clothes from './Clothes';
 import Clothing from './Clothing';
-import Models from './Models';
+import Models from '../helpers/Models';
 import Shoe from './Shoe';
 import Shoes from './Shoes';
 
@@ -26,10 +26,10 @@ const ClothingDetails = ( {match}: any ) => {
             <div>
                 <section className="cards-filtered" >
                     {filteredClothing.map((clothes: Clothing) =>(
-                        <Clothes key={clothes.id} clothes={clothes} />
+                        <Clothes key={clothes.id} clothes={clothes} hasAddToCart={true} />
                     ))}
                     {filteredShoes.map((shoe: Shoes) =>(
-                        <Shoe key={shoe.id} shoe={shoe} />
+                        <Shoe key={shoe.id} shoe={shoe} hasAddToCart={true}/>
                     ))}
                 </section>
             </div>

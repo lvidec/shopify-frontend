@@ -1,6 +1,7 @@
 import { Sex } from "./Enums";
 
 
+
 export default interface Models{
 
     JwtToken: {

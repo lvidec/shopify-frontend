@@ -5,12 +5,15 @@ import Clothing from "./components/Clothing";
 import Navigation from "./components/Navigation";
 import UserService from "./service/UserService";
 import Shoes from "./components/Shoes";
-import Models from "./components/Models";
-import { CartContext } from "./service/CartContext";
+import Models from "./helpers/Models";
+import { CartContext } from "./helpers/CartContext";
 import Login from "./components/Login";
 import Filters from "./components/Filters";
 import UserDashboard from "./components/UserDashboard";
 import ClothingDetails from "./components/ClothingDetails";
+import AddProduct from "./components/AddProduct";
+import ProtectedRoute from "./helpers/ProtectedRoute";
+import Cart from "./components/Cart";
 
 
 export const apiRoot = "http://localhost:8080";
@@ -33,6 +36,9 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path='/login' component={Login}/>
           <Route exact path='/user-dashboard' component={UserDashboard}/>
+          <ProtectedRoute exact path='/add-clothing' shouldBeAdmin={true} render={() => <AddProduct role={'CLOTHING'} />}/>
+          <ProtectedRoute exact path='/add-shoes' shouldBeAdmin={true} render={() => <AddProduct role={'SHOES'} />}/>
+          <ProtectedRoute exact path='/cart' shouldBeAdmin={false} render={() => <Cart clothing={productsMemo.clothingContext} shoes={productsMemo.shoesContext} /> }/>
           <CartContext.Provider value={productsMemo}>
             <Route exact path='/:id' component={ClothingDetails}/>
             <Route exact path='/'>

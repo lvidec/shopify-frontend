@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { ajax } from "rxjs/ajax";
-import Models from "../components/Models";
+import Models from "../helpers/Models";
 import {BehaviorSubject} from "rxjs";
 import { apiRoot } from "../App";
 

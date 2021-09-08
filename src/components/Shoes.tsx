@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { ajax } from "rxjs/ajax";
-import Models from "./Models";
+import Models from "../helpers/Models";
 import { apiRoot } from "../App";
 import Shoe from "./Shoe";
-import { Sex } from "./Enums";
-import { CartContext } from "../service/CartContext";
+import { Sex } from "../helpers/Enums";
+import { CartContext } from "../helpers/CartContext";
 
 
 const Shoes: React.FC = () => {
@@ -76,7 +76,7 @@ const Shoes: React.FC = () => {
         <>
             {/* <button onClick={() => addShoes(cloth)}>clickni me mofo</button> */}
             {shoesContext.map((shoe: ShoesType, index: number) =>(
-                <Shoe key={index} shoe={shoe} onDelete={deleteShoes}/>
+                <Shoe key={index} shoe={shoe} onDelete={deleteShoes} hasAddToCart={true}/>
             ))}
         </>
     )

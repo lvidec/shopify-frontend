@@ -1,10 +1,10 @@
-import Models from "../components/Models";
+import Models from "../helpers/Models";
 
 
 const KEY_TOKEN = 'token';
 const KEY_USER = 'user';
-
-type User = Models['User'];
+const KEY_CLOTHING = 'clothing';
+const KEY_SHOES = 'shoes';
 
 const destroy = (key: string) => {
   localStorage.removeItem(key);
@@ -38,6 +38,14 @@ const setTokenSession = (token: string) => {
   sessionStorage.setItem(KEY_TOKEN, token);
 }
 
+const setLocalClothing = (clothing: number[]) => {
+  localStorage.setItem(KEY_CLOTHING, JSON.stringify(clothing));
+}
+
+const setLocalShoes = (shoes: number[]) => {
+  localStorage.setItem(KEY_SHOES, JSON.stringify(shoes));
+}
+
 const getUser = () => {
   return get(KEY_USER);
 };
@@ -46,12 +54,28 @@ const getToken = () => {
   return get(KEY_TOKEN);
 };
 
+const getLocalClothing = (): number[] => {
+  return JSON.parse(get(KEY_CLOTHING));
+}
+
+const getLocalShoes = (): number[] => {
+  return JSON.parse(get(KEY_SHOES));
+}
+
 const destroyToken = () => {
   destroy(KEY_TOKEN);
 };
 
 const destroyUser = () => {
   destroy(KEY_USER);
+};
+
+const destroyLocalClothing = () => {
+  destroy(KEY_CLOTHING);
+};
+
+const destroyLocalShoes = () => {
+  destroy(KEY_SHOES);
 };
 
 export {
@@ -62,5 +86,11 @@ export {
   setUserSession,
   setUserLocal,
   setTokenSession,
-  setTokenLocal
+  setTokenLocal,
+  setLocalClothing,
+  getLocalClothing,
+  destroyLocalClothing,
+  setLocalShoes,
+  getLocalShoes,
+  destroyLocalShoes
 };
