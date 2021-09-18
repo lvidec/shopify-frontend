@@ -1,19 +1,31 @@
-import { useContext, useCallback } from 'react'
+import { useContext, useCallback, useState, useEffect } from 'react'
 import { CartContext } from '../helpers/CartContext';
 import Category from './Category';
+import { useObservableState } from "observable-hooks";
+import Models from '../helpers/Models';
+
+type Shoes = Models['Shoes'];
 
 const Filters = () => {
 
-    const {clothingContext, setClothingContext, shoesContext, setShoesContext} = useContext(CartContext);
+    const {clothingContext, shoes$} = useContext(CartContext);
+    // const shoesObservableContext = useObservableState(shoes$, []);
+
+    const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
+
+    useEffect(() => {
+        const subscription = shoes$.subscribe(setShoesObservableContext);
+        return () => subscription.unsubscribe(); 
+    }, [])
 
     const distinctBrands = useCallback(() : string[] =>{
         // let distinctClothing = [...new Set(clothingContext.map(clothes => clothes.brandName))]
         // clothingContext.forEach(clothes => setCategory(...category, clothes.brandName));
         let brandNames: string[] = [];
         clothingContext.forEach(clothes => brandNames.push(clothes.brandName))
-        shoesContext.forEach(shoes => brandNames.push(shoes.brandName))
+        shoesObservableContext.forEach(shoes => brandNames.push(shoes.brandName))
         return [...new Set(brandNames)];
-    }, [clothingContext, shoesContext]);
+    }, [clothingContext, shoesObservableContext]);
 
 
 

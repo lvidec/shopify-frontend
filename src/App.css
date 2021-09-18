@@ -230,6 +230,11 @@ a:focus {
   outline:none;
   outline-offset: 0;
 }
+/* 
+#accordian{
+  background-color: #61dafb;
+  border: 5px solid red;
+} */
 
 .category-products .panel {
 	background-color: #FFFFFF;
@@ -329,6 +334,7 @@ a:focus {
 
 .category-products {
   border: 1px solid #F7F7F0;
+  border-right: none;
   margin-bottom: 35px;
   padding-bottom: 20px;
   padding-top: 15px;
@@ -344,4 +350,15 @@ a:focus {
 	height: 0;
 	z-index: -2;
 }
+
+
+.footerinjo {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
 

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Clothing from "./Clothing";
+import Clothing from "../components/Clothing";
+import { CartContext } from "../helpers/CartContext";
 import { Sex } from "../helpers/Enums";
 import Models from '../helpers/Models';
 
@@ -23,6 +24,8 @@ const AddProduct = ({role}: {role: string}) =>{
     const [sex, setSex] = useState<Sex>(Sex.MALE);
     const [clothingTypeId, setClothingTypeId] = useState<number>(0);
     const [shoesTypeId, setShoesTypeId] = useState<number>(0);
+
+    const { clothingContext, setClothingContext, shoes$} = useContext(CartContext);
 
 
     function isClothing(product: Clothing | Shoes): product is Clothing {
@@ -48,7 +51,7 @@ const AddProduct = ({role}: {role: string}) =>{
         
           if(res && res.ok){
             const data = await res.json();
-            // setVaccines([...vaccines, data])
+            setClothingContext([...clothingContext, data]);
             return data;
           }
         }catch(e){
@@ -70,7 +73,7 @@ const AddProduct = ({role}: {role: string}) =>{
         
           if(res && res.ok){
             const data = await res.json();
-            // setVaccines([...vaccines, data])
+            shoes$.next([...clothingContext, data]);
             return data;
           }
         }catch(e){

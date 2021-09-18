@@ -47,18 +47,18 @@ const Navigation: React.FC = () => {
             </ul>
             <ul className="navbar-nav me-auto mb-2 mb-lg-0 flex-fill justify-content-center" >
               <li className="nav-item">
-                {isAdmin() && <a className="nav-link" style={{color: 'royalblue',pointerEvents: 'none'}} >ADMIN MODE</a>}
+                {isAdmin() && <a className="nav-link" style={{color: 'royalblue',pointerEvents: 'none', paddingLeft: '150px'}} >ADMIN MODE</a>}
               </li>
             </ul>
             <ul className="row navbar-nav me-auto mb-2 mb-lg-0 float-end" >
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/add-clothing">
-                  Add clothing(Admin only)
+                <Link className="nav-link active" style={{padding: '2px'}} aria-current="page" to="/add-clothing">
+                  Add clothing(Admin)
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/add-shoes">
-                  Add shoes(Admin only)
+                <Link className="nav-link active" style={{padding: '2px'}} aria-current="page" to="/add-shoes">
+                  Add shoes(Admin)
                 </Link>
               </li>
             </ul>

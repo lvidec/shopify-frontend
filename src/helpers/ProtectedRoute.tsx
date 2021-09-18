@@ -7,8 +7,12 @@ export type ProtectedRouteProps = {
   shouldBeAdmin: boolean;
 } & RouteProps;
 
+// interface ProtectedRouteProps extends RouteProps {
+//   shouldBeAdmin: boolean;
+// };
 
 const ProtectedRoute = ({shouldBeAdmin, ...routeProps}: ProtectedRouteProps) => {
+// const ProtectedRoute: React.FC<ProtectedRouteProps>= ({shouldBeAdmin, ...routeProps}) => {
   if(JSON.parse(getUser()).auth === 'ADMIN') {
     return <Route {...routeProps} />;
   } 

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { CartContext } from '../helpers/CartContext';
 import Clothes from './Clothes';
@@ -11,14 +11,21 @@ import Shoes from './Shoes';
 type Clothing = Models['Clothing'];
 type Shoes = Models['Shoes'];
 
-const ClothingDetails = ( {match}: any ) => {
+const ProductDetailsCategory = ( {match}: any ) => {
 
-    const {clothingContext, setClothingContext, shoesContext, setShoesContext} = useContext(CartContext);
+    const {clothingContext, shoes$} = useContext(CartContext);
+
+    const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
+
+    useEffect(() => {
+        const subscription = shoes$.subscribe(setShoesObservableContext);
+        return () => subscription.unsubscribe(); 
+    }, [])
 
     let filteredClothing: Clothing[] = clothingContext.filter(clothes => clothes.brandName === match.params.id);
-    let filteredShoes: Shoes[] = shoesContext.filter(shoes => shoes.brandName === match.params.id);
+    let filteredShoes: Shoes[] = shoesObservableContext.filter(shoes => shoes.brandName === match.params.id);
 
-    if(clothingContext.length + shoesContext.length < 1)
+    if(clothingContext.length + shoesObservableContext.length < 1)
         return <Redirect to={'/'} />
     else    
         return (
@@ -36,4 +43,4 @@ const ClothingDetails = ( {match}: any ) => {
         )
 }
 
-export default ClothingDetails
+export default ProductDetailsCategory

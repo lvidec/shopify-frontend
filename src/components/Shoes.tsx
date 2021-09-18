@@ -5,24 +5,36 @@ import { apiRoot } from "../App";
 import Shoe from "./Shoe";
 import { Sex } from "../helpers/Enums";
 import { CartContext } from "../helpers/CartContext";
+import { BehaviorSubject } from "rxjs";
+import useFetch from "../helpers/useFetch";
 
 
-const Shoes: React.FC = () => {
+const Shoes = ({search}: {search: string}) => {
     
     type ShoesType = Models['Shoes'];
 
+    // const {shoesContext, setShoesContext} = useContext(CartContext);
+    const { shoes$ } = useContext(CartContext);
+
     const [shoes, setShoes] = useState<ShoesType[]>([]);
 
-    const {clothingContext, setClothingContext, shoesContext, setShoesContext} = useContext(CartContext);
+    const [mockShoes, setMockShoes] = useState<ShoesType[]>([])
 
-    useEffect(() => {
-        const subscription = ajax.getJSON(apiRoot + '/shoes').subscribe((res: any) =>{
-            setShoesContext(res);
-        })
+    const {response, error}: {response: ShoesType[]; error: string } = useFetch({
+        method: 'get',
+        url: apiRoot + '/shoes'
+    });
     
-        return () => subscription.unsubscribe();
+    
+    useEffect(() => {
 
-    }, [setShoesContext])
+        if(response !== null){
+            shoes$.next(response);
+            setShoes(response);
+            setMockShoes(response);
+        }
+        
+    }, [response, shoes$])
 
 
     // function isClothing(product: any): product is Clothing {
@@ -37,15 +49,15 @@ const Shoes: React.FC = () => {
     
 
     const getShoes = () => {
-       return shoesContext;
+       return shoes;
     }
 
 
     const addShoes = (clothes: ShoesType) => {
         
         ajax.post(apiRoot + '/shoes/save', clothes).subscribe((res: any) =>{
-            setShoesContext([...shoesContext, res]);
-            console.log(shoesContext);
+            shoes$.next([...shoes, res]);
+            console.log(shoes);
         })
        
     }
@@ -53,8 +65,8 @@ const Shoes: React.FC = () => {
     const deleteShoes = (id: number) => {
         
         ajax.delete(`${apiRoot}/shoes/${id}`).subscribe((res: any) =>{
-            setShoesContext(shoesContext.filter(x => x.id != id));
-            console.log(shoesContext);
+            shoes$.next(shoes.filter(x => x.id != id));
+            console.log(shoes);
         })
     }
     
@@ -74,10 +86,16 @@ const Shoes: React.FC = () => {
     
     return ( 
         <>
-            {/* <button onClick={() => addShoes(cloth)}>clickni me mofo</button> */}
-            {shoesContext.map((shoe: ShoesType, index: number) =>(
-                <Shoe key={index} shoe={shoe} onDelete={deleteShoes} hasAddToCart={true}/>
-            ))}
+            {search ? (
+                mockShoes.filter(shoe => shoe.name.toLowerCase().includes(search)).map((shoe: ShoesType, index: number) => (
+                    <Shoe key={index} shoe={shoe} onDelete={deleteShoes} hasAddToCart={true}/>
+                    ))
+                ) : (
+                    shoes.map((shoe: ShoesType, index: number) =>(
+                        <Shoe key={index} shoe={shoe} onDelete={deleteShoes} hasAddToCart={true}/>
+                    ))
+                )
+            }
         </>
     )
 
