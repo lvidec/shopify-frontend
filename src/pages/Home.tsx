@@ -8,7 +8,6 @@ const Home: React.FC = () => {
 
   const [search, setSearch] = useState('');
   
-
   return (
     <div className='isus'>
       <label><i className='fa fa-search'></i> &nbsp; </label>

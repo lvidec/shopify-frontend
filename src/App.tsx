@@ -90,15 +90,15 @@ const App: React.FC = () => {
           />
           <CartContext.Provider value={productsMemo}>
             <Route exact path={ROUTES.HOME} component={Home} />
-            {pageNumbers.length && pageNumbers.map((number, index) => (
+            {pageNumbers.length &&
+              pageNumbers.map((number, index) => (
                 <Route
                   key={index}
                   exact
                   path={`/page-${number}`}
                   component={PageProducts}
-              />
-              )
-            )}
+                />
+              ))}
             <Route
               exact
               path={ROUTES.PRODUCT_DETAILS}

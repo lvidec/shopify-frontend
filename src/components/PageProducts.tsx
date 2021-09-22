@@ -7,6 +7,7 @@ import Models from '../helpers/Models';
 import Shoe from './Shoe';
 import Shoes from './Shoes';
 import { POSTS_PER_PAGE } from '../App';
+import Pagination from './Pagination';
 
 
 type Clothing = Models['Clothing'];
@@ -15,10 +16,11 @@ var numberOfClothingRemaining: number = 0;
 
 const PageProducts = ( {match}: any ) => {
 
+    
     const {clothingContext, shoes$} = useContext(CartContext);
-
+    
     const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
-
+    
     useEffect(() => {
         const subscription = shoes$.subscribe(setShoesObservableContext);
         return () => subscription.unsubscribe(); 
@@ -41,23 +43,21 @@ const PageProducts = ( {match}: any ) => {
         paginatedClothing = clothingContext.slice( (pageNumber - 1) * POSTS_PER_PAGE, POSTS_PER_PAGE * pageNumber);
         if(clothingContext.length < POSTS_PER_PAGE * pageNumber){
             if(pageNumber - startingPoint === 0){
-                numberOfClothingRemaining = POSTS_PER_PAGE * pageNumber - clothingContext.length;
-                console.log(numberOfClothingRemaining);
+                numberOfClothingRemaining = clothingContext.length - (POSTS_PER_PAGE * (pageNumber - 1));
                 paginatedShoes = shoesObservableContext.slice( (pageNumber - startingPoint) * POSTS_PER_PAGE, POSTS_PER_PAGE * (pageNumber - startingPoint + 1) - numberOfClothingRemaining);
             }
             else{
-                console.log(numberOfClothingRemaining);
                 paginatedShoes = shoesObservableContext.slice( ((pageNumber - startingPoint) * POSTS_PER_PAGE) - numberOfClothingRemaining, POSTS_PER_PAGE * (pageNumber - startingPoint + 1) - numberOfClothingRemaining);
             }
         }
     }
-
+    
     if(clothingContext.length + shoesObservableContext.length < 1)
         return <Redirect to={'/'} />
     else    
         return (
             <div>
-                sdlakfjalskdfjlaksdjflkajsdlfkjasdlkfjalsdkjflkj
+                <Pagination/>
                 <section className="cards-filtered" >
                     {paginatedClothing.map((clothes: Clothing) =>(
                         <Clothes key={clothes.id} clothes={clothes} hasAddToCart={true} />
