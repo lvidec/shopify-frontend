@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Clothing from "../components/Clothing";
 import Filters from "../components/Filters";
+import Pagination from "../components/Pagination";
 import Shoes from "../components/Shoes";
 
 const Home: React.FC = () => {
@@ -9,16 +10,17 @@ const Home: React.FC = () => {
   
 
   return (
-    <div>
+    <div className='isus'>
       <label><i className='fa fa-search'></i> &nbsp; </label>
       <input type="text" placeholder='Search' onChange={(e) => setSearch(e.target.value.toLowerCase())} style={{marginBottom: '45px'}} />
+      <Pagination/>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "20% 80%",
           paddingRight: "20px",
         }}
-      >
+        >
         <div className="filters">
           <Filters />
         </div>

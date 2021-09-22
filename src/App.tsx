@@ -14,11 +14,11 @@ import NotFound from "./components/NotFound";
 import Home from "./pages/Home";
 import { useObservableState } from "observable-hooks";
 import { BehaviorSubject } from "rxjs";
-import Footer from "./components/Footer";
+import Pagination from "./components/Pagination";
+import PageProducts from "./components/PageProducts";
 
-
-
-export const apiRoot = "http://localhost:8080";
+export const API_ROOT = "http://localhost:8080";
+export const POSTS_PER_PAGE = 6;
 
 export const ROUTES = {
   HOME: "/",
@@ -34,7 +34,6 @@ type Clothing = Models["Clothing"];
 type Shoes = Models["Shoes"];
 type User = Models["User"];
 
-
 const App: React.FC = () => {
   type Clothing = Models["Clothing"];
   type Shoes = Models["Shoes"];
@@ -49,11 +48,26 @@ const App: React.FC = () => {
       setClothingContext,
       // shoesContext,
       // setShoesContext,
-      shoes$
+      shoes$,
     }),
     // [clothingContext, setClothingContext, shoesContext, setShoesContext]
     [clothingContext, setClothingContext, shoes$]
   );
+
+  const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>(
+    []
+  );
+  useEffect(() => {
+    const subscription = shoes$.subscribe(setShoesObservableContext);
+  }, [shoes$]);
+
+  const totalPosts = clothingContext.length + shoesObservableContext.length;
+  let pageNumbers = [];
+  if (totalPosts !== 0) {
+    for (let i = 1; i <= Math.ceil(totalPosts / POSTS_PER_PAGE); i++) {
+      pageNumbers.push(i);
+    }
+  }
 
   return (
     <Router>
@@ -76,6 +90,15 @@ const App: React.FC = () => {
           />
           <CartContext.Provider value={productsMemo}>
             <Route exact path={ROUTES.HOME} component={Home} />
+            {pageNumbers.length && pageNumbers.map((number, index) => (
+                <Route
+                  key={index}
+                  exact
+                  path={`/page-${number}`}
+                  component={PageProducts}
+              />
+              )
+            )}
             <Route
               exact
               path={ROUTES.PRODUCT_DETAILS}
@@ -89,14 +112,13 @@ const App: React.FC = () => {
                 <Cart
                   clothing={productsMemo.clothingContext}
                   // shoes={productsMemo.shoesContext}
-                  shoes={productsMemo.shoes$}
+                  shoes$={productsMemo.shoes$}
                 />
               )}
             />
           </CartContext.Provider>
           <Route component={NotFound} />
         </Switch>
-        <Footer/>
       </div>
     </Router>
   );

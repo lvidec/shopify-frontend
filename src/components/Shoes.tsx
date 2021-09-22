@@ -1,12 +1,13 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useLayoutEffect } from "react";
 import { ajax } from "rxjs/ajax";
 import Models from "../helpers/Models";
-import { apiRoot } from "../App";
+import { API_ROOT } from "../App";
 import Shoe from "./Shoe";
 import { Sex } from "../helpers/Enums";
 import { CartContext } from "../helpers/CartContext";
 import { BehaviorSubject } from "rxjs";
 import useFetch from "../helpers/useFetch";
+import { useLayoutSubscription } from "observable-hooks";
 
 
 const Shoes = ({search}: {search: string}) => {
@@ -22,11 +23,11 @@ const Shoes = ({search}: {search: string}) => {
 
     const {response, error}: {response: ShoesType[]; error: string } = useFetch({
         method: 'get',
-        url: apiRoot + '/shoes'
+        url: API_ROOT + '/shoes'
     });
     
     
-    useEffect(() => {
+    useLayoutEffect(() => {
 
         if(response !== null){
             shoes$.next(response);
@@ -55,7 +56,7 @@ const Shoes = ({search}: {search: string}) => {
 
     const addShoes = (clothes: ShoesType) => {
         
-        ajax.post(apiRoot + '/shoes/save', clothes).subscribe((res: any) =>{
+        ajax.post(API_ROOT + '/shoes/save', clothes).subscribe((res: any) =>{
             shoes$.next([...shoes, res]);
             console.log(shoes);
         })
@@ -64,7 +65,7 @@ const Shoes = ({search}: {search: string}) => {
     
     const deleteShoes = (id: number) => {
         
-        ajax.delete(`${apiRoot}/shoes/${id}`).subscribe((res: any) =>{
+        ajax.delete(`${API_ROOT}/shoes/${id}`).subscribe((res: any) =>{
             shoes$.next(shoes.filter(x => x.id != id));
             console.log(shoes);
         })

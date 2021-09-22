@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { ajax } from "rxjs/ajax";
 import Models from "../helpers/Models";
 import {BehaviorSubject} from "rxjs";
-import { apiRoot } from "../App";
+import { API_ROOT } from "../App";
 
 const UserService = () => {
 
@@ -13,7 +13,7 @@ const UserService = () => {
     let userSubject = new BehaviorSubject<User[] | null>(null);
 
     useEffect(() => {
-        ajax.getJSON(apiRoot + '/user').subscribe((res: any) =>{
+        ajax.getJSON(API_ROOT + '/user').subscribe((res: any) =>{
             setUsers(res);
         })
     
@@ -28,14 +28,14 @@ const UserService = () => {
     }
 
     const addUser = (user: User) => {
-        ajax.post(apiRoot + '/user', user).subscribe((res: any) =>{
+        ajax.post(API_ROOT + '/user', user).subscribe((res: any) =>{
             setUsers([...users, res]);
             userSubject.next([...users]);
         })
     }
 
     const deleteUser = (id: number) => {
-        ajax.delete(`${apiRoot}/user/${id}`).subscribe((res: any) =>{
+        ajax.delete(`${API_ROOT}/user/${id}`).subscribe((res: any) =>{
             setUsers(users.filter(x => x.id != id));
             userSubject.next([...users]);
         })

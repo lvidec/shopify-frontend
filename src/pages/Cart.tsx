@@ -14,15 +14,15 @@ type Shoes = Models['Shoes'];
 interface CartProps{
     clothing: Clothing[];
     // shoes: Shoes[];
-    shoes: BehaviorSubject<Shoes[]>;
+    shoes$: BehaviorSubject<Shoes[]>;
 }
 
-const Cart: React.FC<CartProps> = ({clothing, shoes}) => {
+const Cart: React.FC<CartProps> = ({clothing, shoes$}) => {
 
     const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
 
     useEffect(() => {
-        const subscription = shoes.subscribe(setShoesObservableContext);
+        const subscription = shoes$.subscribe(setShoesObservableContext);
         return () => subscription.unsubscribe(); 
     }, [])
 

@@ -2,7 +2,7 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Models from "../helpers/Models";
-import { apiRoot } from "../App";
+import { API_ROOT } from "../App";
 import jwtDecode from "jwt-decode";
 import { setUserLocal, setTokenLocal, getToken } from "../service/StorageService";
 
@@ -23,7 +23,7 @@ const Login = () => {
 
     useEffect(() =>{
         const fetchData = async () =>{
-            let res = await axios.get(`${apiRoot}/user`);
+            let res = await axios.get(`${API_ROOT}/user`);
             setAllUsers(await res.data);
         
             // console.table(allUsers);
@@ -38,7 +38,7 @@ const Login = () => {
 
         try{   
 
-            const resToken = await axios.post(apiRoot + "/api/authenticate", { username, password });
+            const resToken = await axios.post(API_ROOT + "/api/authenticate", { username, password });
  
             userAuthentication = resToken.data;
             

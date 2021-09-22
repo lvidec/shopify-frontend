@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useLayoutEffect } from "react";
 import { ajax } from "rxjs/ajax";
 import Models from "../helpers/Models";
-import { apiRoot } from "../App";
+import { API_ROOT } from "../App";
 import Clothes from "./Clothes";
 import { Sex } from "../helpers/Enums";
 import { CartContext } from "../helpers/CartContext";
@@ -20,11 +20,11 @@ const Clothing = ({search}: {search: string} ) => {
     
     const {response, error}: {response: Clothing[]; error: string } = useFetch({
         method: 'get',
-        url: apiRoot + '/clothing'
+        url: API_ROOT + '/clothing'
     });
     
     
-    useEffect(() => {
+    useLayoutEffect(() => {
 
         if(response !== null){
             setClothingContext(response);
@@ -41,7 +41,7 @@ const Clothing = ({search}: {search: string} ) => {
 
     const addClothing = (clothes: Clothing) => {
         
-        ajax.post(apiRoot + '/clothing/save', clothes).subscribe((res: any) =>{
+        ajax.post(API_ROOT + '/clothing/save', clothes).subscribe((res: any) =>{
             setClothingContext([...clothingContext, res]);
             console.log(clothingContext);
         })
@@ -50,7 +50,7 @@ const Clothing = ({search}: {search: string} ) => {
     
     const deleteClothing = (id: number) => {
         
-        ajax.delete(`${apiRoot}/clothing/${id}`).subscribe((res: any) =>{
+        ajax.delete(`${API_ROOT}/clothing/${id}`).subscribe((res: any) =>{
             setClothingContext(clothingContext.filter(x => x.id !== id));
             console.log(clothingContext);
         })
