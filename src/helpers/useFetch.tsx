@@ -18,23 +18,23 @@ const useFetch = ({
     url: string,
     method: string,
     headers?: HeadersInit | undefined, 
-    body?: any
-    [key: string]: string | HeadersInit | undefined;
+    body?: any,
+    // [key: string]: string | HeadersInit | undefined;
 }) => {
   const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // const key: (keyof AxiosProps) = 'method';
 
     (async () => {
       try {
         const res = await fetch(url, 
-            {
-                method: method,
-                headers: headers, 
-                body: JSON.stringify(body)
-        });
+          {
+            method: method,
+            headers: headers, 
+            body: JSON.stringify(body)
+          }
+        );
         const data = await res.json();
         setResponse(data);
       } catch (error) {

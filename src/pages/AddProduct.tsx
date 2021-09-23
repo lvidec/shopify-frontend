@@ -92,14 +92,6 @@ const AddProduct = ({role}: {role: string}) =>{
         else if(role === 'SHOES')
             addShoes({id: 0, name: name,details: details, price: price, brandName: brandName, img: img, sex: sex, shoesType: { id: shoesTypeId, type: "" }})
 
-
-        console.log(name);
-        console.log(details);
-        console.log(price);
-        console.log(img);
-        console.log(brandName);
-        console.log(sex);
-        console.log(clothingTypeId);
         
         if(!name || !details || !price || !img || !brandName || (!clothingTypeId && !shoesTypeId) ){
             alert('Please add all info');
@@ -134,6 +126,7 @@ const AddProduct = ({role}: {role: string}) =>{
                         />
                     </div>
                 </div>
+                <br />
                 <div className='form-group row mx-auto'>
                     <div className="col-md-5 mx-auto">
                         <label>Details</label>
@@ -145,6 +138,7 @@ const AddProduct = ({role}: {role: string}) =>{
                         />
                     </div>
                 </div>
+                <br />
                 <div className='form-group row mx-auto'>
                     <div className="col-md-5 mx-auto">
                         <label>Price</label>
@@ -156,6 +150,7 @@ const AddProduct = ({role}: {role: string}) =>{
                         />
                     </div>
                 </div>
+                <br />
                 <div className='form-group row mx-auto'>
                     <div className="col-md-5 mx-auto">
                         <label>Image url</label>
@@ -167,6 +162,7 @@ const AddProduct = ({role}: {role: string}) =>{
                         />
                     </div>
                 </div>
+                <br />
                 <div className='form-group row mx-auto'>
                     <div className="col-md-5 mx-auto">
                         <label>Brand name</label>

@@ -1,5 +1,5 @@
 import { Redirect, useHistory } from "react-router-dom";
-import { isAuthenticated } from "../service/AuthService";
+import { isAdmin, isAuthenticated } from "../service/AuthService";
 import { destroyLocalClothing, getLocalClothing, setLocalClothing } from "../service/StorageService";
 import Models from "../helpers/Models";
 
@@ -41,6 +41,7 @@ const Clothes: React.FC<ClothesProps> = ({clothes, onDelete, hasAddToCart}) => {
             {/* <span>{shoes.details}</span> */}
             {hasAddToCart && <p><button onClick={() => addToCart(clothes.id)}><i style={{paddingRight: '15px'}} className="fa fa-shopping-cart"></i>Add to Cart</button></p>}
             {/* <button onClick={destroy}>Destroy</button> */}
+            {isAdmin() && hasAddToCart && <p><button style={{backgroundColor: 'rgb(190, 38, 38)'}} onClick={() => {onDelete && onDelete(clothes.id)}}><i style={{paddingRight: '15px'}} className="fa fa-trash-o"></i>Delete</button></p>}
         </div>
 
     )

@@ -48,52 +48,32 @@ const Shoes = ({search}: {search: string}) => {
     //     return true;
     // }
     
-
-    const getShoes = () => {
-       return shoes;
-    }
-
-
-    const addShoes = (clothes: ShoesType) => {
-        
-        ajax.post(API_ROOT + '/shoes/save', clothes).subscribe((res: any) =>{
-            shoes$.next([...shoes, res]);
-            console.log(shoes);
-        })
-       
-    }
     
-    const deleteShoes = (id: number) => {
-        
-        ajax.delete(`${API_ROOT}/shoes/${id}`).subscribe((res: any) =>{
-            shoes$.next(shoes.filter(x => x.id != id));
-            console.log(shoes);
-        })
-    }
-    
-    let cloth: ShoesType = {    
-        id: 2,
-        name: "Shoes 2",
-        details: 'isus',
-        price: 420.0,
-        img: "img...Plein",
-        brandName: 'isus1',
-        sex: Sex.FEMALE, 
-        shoesType: {
-            id: 2,
-            type: 'Flip-Flops'
+    const deleteShoeById = async (id: number) => {
+        const res = await fetch(`${API_ROOT}/shoes/${id}`, {
+            method: 'DELETE',
+        });
+
+        if(res.ok){ 
+            setShoes(shoes.filter(shoe => shoe.id !== id))
+            shoes$.next(shoes.filter(shoe => shoe.id !== id));
+            alert('Rxjs magic!');
+        }
+        else{
+            alert('Error deleting this shoe!')
         }
     }
+
     
     return ( 
         <>
             {search ? (
                 mockShoes.filter(shoe => shoe.name.toLowerCase().includes(search)).map((shoe: ShoesType, index: number) => (
-                    <Shoe key={index} shoe={shoe} onDelete={deleteShoes} hasAddToCart={true}/>
+                    <Shoe key={index} shoe={shoe} onDelete={deleteShoeById} hasAddToCart={true}/>
                     ))
                 ) : (
                     shoes.map((shoe: ShoesType, index: number) =>(
-                        <Shoe key={index} shoe={shoe} onDelete={deleteShoes} hasAddToCart={true}/>
+                        <Shoe key={index} shoe={shoe} onDelete={deleteShoeById} hasAddToCart={true}/>
                     ))
                 )
             }

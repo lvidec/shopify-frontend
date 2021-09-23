@@ -6,7 +6,7 @@ import Clothing from './Clothing';
 import Models from '../helpers/Models';
 import Shoe from './Shoe';
 import Shoes from './Shoes';
-import { POSTS_PER_PAGE } from '../App';
+import { API_ROOT, POSTS_PER_PAGE } from '../App';
 import Pagination from './Pagination';
 
 
@@ -17,7 +17,7 @@ var numberOfClothingRemaining: number = 0;
 const PageProducts = ( {match}: any ) => {
 
     
-    const {clothingContext, shoes$} = useContext(CartContext);
+    const {clothingContext, setClothingContext, shoes$} = useContext(CartContext);
     
     const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
     
@@ -51,6 +51,37 @@ const PageProducts = ( {match}: any ) => {
             }
         }
     }
+
+
+    const deleteShoeById = async (id: number) => {
+        const res = await fetch(`${API_ROOT}/shoes/${id}`, {
+            method: 'DELETE',
+        });
+
+        if(res.ok){ 
+            setShoesObservableContext(shoesObservableContext.filter(shoe => shoe.id !== id))
+            shoes$.next(shoesObservableContext.filter(shoe => shoe.id !== id));
+            console.log('deleted, ', id)
+        }
+        else{
+            alert('Error deleting this shoe!')
+        }
+    }
+
+    const deleteClothesById = async (id: number) => {
+        
+        const res = await fetch(`${API_ROOT}/clothing/${id}`, {
+            method: 'DELETE'    
+        });
+
+        if(res.ok){
+            setClothingContext(clothingContext.filter(clothes => clothes.id !== id));
+        }else{
+            alert('Error deleting clothes!')
+        }
+
+    }
+
     
     if(clothingContext.length + shoesObservableContext.length < 1)
         return <Redirect to={'/'} />
@@ -60,10 +91,10 @@ const PageProducts = ( {match}: any ) => {
                 <Pagination/>
                 <section className="cards-filtered" >
                     {paginatedClothing.map((clothes: Clothing) =>(
-                        <Clothes key={clothes.id} clothes={clothes} hasAddToCart={true} />
+                        <Clothes key={clothes.id} clothes={clothes} hasAddToCart={true} onDelete={deleteClothesById}  />
                     ))}
                     {paginatedClothing.length < 6 && paginatedShoes.map((shoe: Shoes) =>(
-                        <Shoe key={shoe.id} shoe={shoe} hasAddToCart={true}/>
+                        <Shoe key={shoe.id} shoe={shoe} hasAddToCart={true} onDelete={deleteShoeById}/>
                     ))}
                 </section>
             </div>

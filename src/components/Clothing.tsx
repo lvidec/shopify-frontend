@@ -11,9 +11,7 @@ import useFetch from "../helpers/useFetch";
 const Clothing = ({search}: {search: string} ) => {
     
     type Clothing = Models['Clothing'];
-    
-    const [clothing, setClothing] = useState<Clothing[]>([]);
-    
+        
     const {clothingContext, setClothingContext} = useContext(CartContext);
     const [mockClothing, setMockClothing] = useState<Clothing[]>(clothingContext);
     
@@ -24,49 +22,27 @@ const Clothing = ({search}: {search: string} ) => {
     });
     
     
-    useLayoutEffect(() => {
+    useEffect(() => {
 
         if(response !== null){
             setClothingContext(response);
             setMockClothing(response);
         }
         
-    }, [response, clothingContext],)
-        
-
-
-    const getClothing = () => {
-       return clothingContext;
-    }
-
-    const addClothing = (clothes: Clothing) => {
-        
-        ajax.post(API_ROOT + '/clothing/save', clothes).subscribe((res: any) =>{
-            setClothingContext([...clothingContext, res]);
-            console.log(clothingContext);
-        })
-       
-    }
+    }, [response, clothingContext, setClothingContext],)
     
-    const deleteClothing = (id: number) => {
-        
-        ajax.delete(`${API_ROOT}/clothing/${id}`).subscribe((res: any) =>{
-            setClothingContext(clothingContext.filter(x => x.id !== id));
-            console.log(clothingContext);
-        })
-    }
     
-    let cloth: Clothing = {    
-        id: 2,
-        name: "Clothing 2",
-        details: 'isus',
-        price: 420.0,
-        img: "img...Plein",
-        brandName: 'isus1',
-        sex: Sex.FEMALE, 
-        clothingType: {
-            id: 1,
-            type: 'Hoodie'
+    const deleteClothesById = async (id: number) => {
+        
+        const res = await fetch(`${API_ROOT}/clothing/${id}`, {
+            method: 'DELETE'    
+        });
+
+        if(res.ok){
+            setClothingContext(clothingContext.filter(clothes => clothes.id !== id));
+            alert('Deletion will be completed after refresh...done without Rxjs, now try deleting shoes for full responsiveness with Rxjs');
+        }else{
+            alert('Error deleting clothes!')
         }
     }
 
@@ -74,11 +50,11 @@ const Clothing = ({search}: {search: string} ) => {
         <>
             {search ? (
                 mockClothing.filter(clothes => clothes.name.toLowerCase().includes(search)).map((clothes: Clothing, index: number) =>(
-                    <Clothes key={index} clothes={clothes} onDelete={deleteClothing} hasAddToCart={true}/>
+                    <Clothes key={index} clothes={clothes} onDelete={deleteClothesById} hasAddToCart={true}/>
                     ))
                 ) : (
                     clothingContext.map((clothes: Clothing, index: number) =>(
-                        <Clothes key={index} clothes={clothes} onDelete={deleteClothing} hasAddToCart={true}/>
+                        <Clothes key={index} clothes={clothes} onDelete={deleteClothesById} hasAddToCart={true}/>
                     ))
                 )
             }
