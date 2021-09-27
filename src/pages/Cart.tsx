@@ -38,6 +38,9 @@ const Cart: React.FC<CartProps> = ({clothing, shoes$}) => {
     let totalPriceClothing: number | undefined = filteredClothing?.reduce((a, {price}) => a + price, 0);
     let totalPriceShoes: number | undefined = filteredShoes?.reduce((a, {price}) => a + price, 0);
 
+    if(totalPriceClothing === undefined) totalPriceClothing = 0;
+    if(totalPriceShoes === undefined) totalPriceShoes = 0;
+    
     if(clothing.length + shoesObservableContext.length < 1){
         return <Redirect to='/'/> 
     }
@@ -46,7 +49,7 @@ const Cart: React.FC<CartProps> = ({clothing, shoes$}) => {
     }else
         return (
             <div>
-                <h2>Total price: <span className="price">${(totalPriceClothing && totalPriceShoes) && totalPriceClothing + totalPriceShoes}</span></h2>
+                <h2>Total price: <span className="price">$ {totalPriceClothing + totalPriceShoes}</span></h2>
                 <section className="cards-filtered" >
                     {filteredClothing && filteredClothing.map((clothes: Clothing) =>(
                         <Clothes key={clothes.id} clothes={clothes} hasAddToCart={false} />
