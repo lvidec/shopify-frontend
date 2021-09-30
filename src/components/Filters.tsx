@@ -16,7 +16,7 @@ const Filters = () => {
     useEffect(() => {
         const subscription = shoes$.subscribe(setShoesObservableContext);
         return () => subscription.unsubscribe(); 
-    }, [])
+    }, [shoes$])
 
     const distinctBrands = useCallback(() : string[] =>{
         // let distinctClothing = [...new Set(clothingContext.map(clothes => clothes.brandName))]

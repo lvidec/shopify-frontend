@@ -52,19 +52,19 @@ const Navigation: React.FC = () => {
             </ul>
             <ul className="row navbar-nav me-auto mb-2 mb-lg-0 float-end" >
               <li className="nav-item">
-                <Link className="nav-link active" style={{padding: '2px'}} aria-current="page" to="/add-clothing">
+                <Link className="nav-link" style={{padding: '2px'}} aria-current="page" to="/add-clothing">
                   Add clothing(Admin)
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" style={{padding: '2px'}} aria-current="page" to="/add-shoes">
+                <Link className="nav-link" style={{padding: '2px'}} aria-current="page" to="/add-shoes">
                   Add shoes(Admin)
                 </Link>
               </li>
             </ul>
             <ul className="row navbar-nav me-auto mb-2 mb-lg-0 float-end" >
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/cart">
+                <Link className="nav-link" aria-current="page" to="/cart">
                   <i className='fa fa-shopping-cart fa-2x'></i>
                 </Link>
               </li>

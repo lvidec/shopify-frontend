@@ -88,33 +88,33 @@ const App: React.FC = () => {
             shouldBeAdmin={true}
             render={() => <AddProduct role={"SHOES"} />}
           />
+          <ProtectedRoute
+            exact
+            path={ROUTES.CART}
+            shouldBeAdmin={false}
+            render={() => (
+              <Cart
+                clothing={productsMemo.clothingContext}
+                // shoes={productsMemo.shoesContext}
+                shoes$={productsMemo.shoes$}
+              />
+            )}
+          />
           <CartContext.Provider value={productsMemo}>
             <Route exact path={ROUTES.HOME} component={Home} />
             {pageNumbers.length &&
               pageNumbers.map((number, index) => (
                 <Route
-                  key={index}
-                  exact
-                  path={`/page-${number}`}
-                  component={PageProducts}
+                key={index}
+                exact
+                path={`/page-${number}`}
+                component={PageProducts}
                 />
-              ))}
+                ))}
             <Route
               exact
               path={ROUTES.PRODUCT_DETAILS}
               component={ProductDetailsCategory}
-            />
-            <ProtectedRoute
-              exact
-              path={ROUTES.CART}
-              shouldBeAdmin={false}
-              render={() => (
-                <Cart
-                  clothing={productsMemo.clothingContext}
-                  // shoes={productsMemo.shoesContext}
-                  shoes$={productsMemo.shoes$}
-                />
-              )}
             />
           </CartContext.Provider>
           <Route component={NotFound} />

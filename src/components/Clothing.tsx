@@ -28,7 +28,7 @@ const Clothing = ({search}: {search: string} ) => {
             setClothingContext(response);
             setMockClothing(response);
         }
-        
+
     }, [response, clothingContext, setClothingContext],)
     
     

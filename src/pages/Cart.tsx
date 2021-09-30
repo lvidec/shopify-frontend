@@ -1,9 +1,9 @@
 import { Redirect } from 'react-router-dom';
-import { getLocalClothing, getLocalShoes } from '../service/StorageService';
+import { getLocalClothing, getLocalShoes, setLocalClothing, setLocalShoes } from '../service/StorageService';
 import Clothes from '../components/Clothes';
 import Models from '../helpers/Models';
 import Shoe from '../components/Shoe';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs'
 import { CartContext } from '../helpers/CartContext';
 
@@ -24,7 +24,7 @@ const Cart: React.FC<CartProps> = ({clothing, shoes$}) => {
     useEffect(() => {
         const subscription = shoes$.subscribe(setShoesObservableContext);
         return () => subscription.unsubscribe(); 
-    }, [])
+    }, [shoes$])
 
     let filteredClothing: Clothing[] | null = null;
     if(getLocalClothing().length)
@@ -34,12 +34,13 @@ const Cart: React.FC<CartProps> = ({clothing, shoes$}) => {
     let filteredShoes: Shoes[] | null = null;
     if(getLocalShoes().length)
         filteredShoes = shoesObservableContext.filter(shoes => getLocalShoes().includes(shoes.id));
-
+    
     let totalPriceClothing: number | undefined = filteredClothing?.reduce((a, {price}) => a + price, 0);
     let totalPriceShoes: number | undefined = filteredShoes?.reduce((a, {price}) => a + price, 0);
-
+    
     if(totalPriceClothing === undefined) totalPriceClothing = 0;
     if(totalPriceShoes === undefined) totalPriceShoes = 0;
+
     
     if(clothing.length + shoesObservableContext.length < 1){
         return <Redirect to='/'/> 
