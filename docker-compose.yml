@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  shopify-backend:
+    image: shopify-backend
+    container_name: shopify-backend
+    build: ./../shopify-backend
+    ports: 
+      - 8080:8080
+    environment:
+      - SPRING.PROFILES.ACTIVE=default
+    volumes:
+      - ../shopify-backend:/usr/src/app
+
+  shopify-frontend:
+    build: ./
+    image: shopify-frontend
+    container_name: shopify-frontend
+    ports:
+      - 3000:3000
+    links:
+      - shopify-backend
+    volumes:
+      - ./:/app

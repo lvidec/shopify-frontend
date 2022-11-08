@@ -1,70 +1,51 @@
-import { useContext, useCallback, useState, useEffect } from 'react'
-import { CartContext } from '../helpers/CartContext';
-import Category from './Category';
-import { useObservableState } from "observable-hooks";
-import Models from '../helpers/Models';
-
-type Shoes = Models['Shoes'];
+import { useCallback, useContext, useRef, useState } from "react";
+import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import Category from "./Category";
 
 const Filters = () => {
+  const { productContext } = useContext<ProductContextTypes>(ProductCartContext);
+  const categoryRef = useRef<HTMLDivElement | null>(null);
+  const [dropDownIcon, setDropDownIcon] = useState(false);
 
-    const {clothingContext, shoes$} = useContext(CartContext);
-    // const shoesObservableContext = useObservableState(shoes$, []);
+  const distinctBrands = useCallback((): string[] => {
+    let brandNames: string[] = [];
+    productContext.forEach((shoes) => brandNames.push(shoes.brandName));
+    return [...new Set(brandNames)];
+  }, [productContext]);
 
-    const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
+  const dropdownAnimation = () => {
+    setDropDownIcon(!dropDownIcon);
+    if (categoryRef.current?.classList.contains("hide-dropdown")) {
+      categoryRef.current.classList.remove("hide-dropdown");
+      categoryRef.current.classList.add("show-dropdown");
+    } else if (categoryRef.current?.classList.contains("show-dropdown")) {
+      categoryRef.current.classList.remove("show-dropdown");
+      categoryRef.current.classList.add("hide-dropdown");
+    }
+  };
 
-    useEffect(() => {
-        const subscription = shoes$.subscribe(setShoesObservableContext);
-        return () => subscription.unsubscribe(); 
-    }, [shoes$])
+  return (
+    <div className="filters-container">
+      <div className="filter-title">
+        <a href="/#" onClick={dropdownAnimation}>
+          Category &nbsp;
+          {dropDownIcon ? (
+            <i className="fa fa-chevron-up"></i>
+          ) : (
+            <i className="fa fa-chevron-down"></i>
+          )}
+        </a>
+      </div>
+      <hr />
+      <div ref={categoryRef} className="hide-dropdown">
+        {distinctBrands().length &&
+          distinctBrands().map((brandName: string, index: number) => (
+            <Category key={index} brandName={brandName} />
+          ))}
+        <br />
+      </div>
+    </div>
+  );
+};
 
-    const distinctBrands = useCallback(() : string[] =>{
-        // let distinctClothing = [...new Set(clothingContext.map(clothes => clothes.brandName))]
-        // clothingContext.forEach(clothes => setCategory(...category, clothes.brandName));
-        let brandNames: string[] = [];
-        clothingContext.forEach(clothes => brandNames.push(clothes.brandName))
-        shoesObservableContext.forEach(shoes => brandNames.push(shoes.brandName))
-        return [...new Set(brandNames)];
-    }, [clothingContext, shoesObservableContext]);
-
-
-
-    return (
-            <div className="left-sidebar">
-                <h2>Category</h2>
-                <div className="panel-group category-products" id="accordian">
-                    {distinctBrands().length && distinctBrands().map((brandName: string, index: number) =>(
-                        <Category key={index} brandName={brandName}/>
-                    ))}
-                </div>
-
-                <br />
-
-
-
-                {/* <h2>Brands</h2>
-                <div className="panel-group category-products" id="accordian">
-                    {}
-                </div>
-             */}
-                {/* <div className="brands_products">
-                    <h2>Brands</h2>
-                    <div className="brands-name">
-                        <ul className="nav nav-pills nav-stacked">
-                            <li><a href=""> <span className="pull-right">(50)</span>Acne</a></li>
-                            <li><a href=""> <span className="pull-right">(56)</span>Grüne Erde</a></li>
-                            <li><a href=""> <span className="pull-right">(27)</span>Albiro</a></li>
-                            <li><a href=""> <span className="pull-right">(32)</span>Ronhill</a></li>
-                            <li><a href=""> <span className="pull-right">(5)</span>Oddmolly</a></li>
-                            <li><a href=""> <span className="pull-right">(9)</span>Boudestijn</a></li>
-                            <li><a href=""> <span className="pull-right">(4)</span>Rösch creative culture</a></li>
-                        </ul>
-                    </div>
-                </div> */}
-
-                
-            </div>
-    )
-}
-
-export default Filters
+export default Filters;

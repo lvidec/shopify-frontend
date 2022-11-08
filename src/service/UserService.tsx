@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from "react";
-import { ajax } from "rxjs/ajax";
+import {useEffect, useState} from "react";
+import {ajax} from "rxjs/ajax";
 import Models from "../helpers/Models";
 import {BehaviorSubject} from "rxjs";
-import { API_ROOT } from "../App";
 
 const UserService = () => {
 
@@ -13,12 +12,11 @@ const UserService = () => {
     let userSubject = new BehaviorSubject<User[] | null>(null);
 
     useEffect(() => {
-        ajax.getJSON(API_ROOT + '/user').subscribe((res: any) =>{
+        ajax.getJSON('/user').subscribe((res: any) =>{
             setUsers(res);
         })
     
         userSubject.next([...users]);
-    
     }, [])
     
 
@@ -28,14 +26,14 @@ const UserService = () => {
     }
 
     const addUser = (user: User) => {
-        ajax.post(API_ROOT + '/user', user).subscribe((res: any) =>{
+        ajax.post('/user', user).subscribe((res: any) =>{
             setUsers([...users, res]);
             userSubject.next([...users]);
         })
     }
 
     const deleteUser = (id: number) => {
-        ajax.delete(`${API_ROOT}/user/${id}`).subscribe((res: any) =>{
+        ajax.delete(`/user/${id}`).subscribe((res: any) =>{
             setUsers(users.filter(x => x.id != id));
             userSubject.next([...users]);
         })

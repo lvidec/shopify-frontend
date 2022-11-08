@@ -1,104 +1,81 @@
-import { useContext, useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import { CartContext } from '../helpers/CartContext';
-import Clothes from './Clothes';
-import Clothing from './Clothing';
-import Models from '../helpers/Models';
-import Shoe from './Shoe';
-import Shoes from './Shoes';
-import { API_ROOT, POSTS_PER_PAGE } from '../App';
-import Pagination from './Pagination';
+import { useContext } from "react";
+import { Redirect } from "react-router-dom";
+import { POSTS_PER_PAGE } from "../App";
+import { PRODUCT_TYPE } from "../helpers/Enums";
+import Models from "../helpers/Models";
+import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import Pagination from "./Pagination";
+import Product from "./Product";
 
+type Clothing = Models["Clothing"];
+type Shoes = Models["Shoes"];
 
-type Clothing = Models['Clothing'];
-type Shoes = Models['Shoes'];
-var numberOfClothingRemaining: number = 0;
+const PageProducts = ({ match }: any) => {
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductCartContext);
 
-const PageProducts = ( {match}: any ) => {
+  const getNumberRegexp = /(?!x)[0-9]+/;
+  const numberArray = getNumberRegexp.exec(match.path);
 
-    
-    const {clothingContext, setClothingContext, shoes$} = useContext(CartContext);
-    
-    const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
-    
-    useEffect(() => {
-        const subscription = shoes$.subscribe(setShoesObservableContext);
-        return () => subscription.unsubscribe(); 
-    }, [shoes$])
+  let pageNumber: number = 0;
 
-    const getNumberRegexp = /(?!x)[0-9]+/;
-    const numberArray = getNumberRegexp.exec(match.path);
-    
-    let pageNumber: number = 0;
+  if (numberArray) pageNumber = parseInt(numberArray[0]);
 
-    if(numberArray)
-        pageNumber = parseInt(numberArray[0]);
+  let paginatedProducts: (Clothing | Shoes)[] = [];
 
-    let paginatedClothing: Clothing[] = [];
-    let paginatedShoes: Shoes[] = [];
+  if (pageNumber !== 0) {
+    paginatedProducts = productContext.slice(
+      (pageNumber - 1) * POSTS_PER_PAGE,
+      POSTS_PER_PAGE * pageNumber
+    );
+  }
 
-    const startingPoint = Math.ceil(clothingContext.length / POSTS_PER_PAGE);
+  const correctType = (product: Clothing | Shoes, type: PRODUCT_TYPE): boolean => {
+    return type in product;
+  };
 
-    if(pageNumber !== 0){
-        paginatedClothing = clothingContext.slice( (pageNumber - 1) * POSTS_PER_PAGE, POSTS_PER_PAGE * pageNumber);
-        if(clothingContext.length < POSTS_PER_PAGE * pageNumber){
-            if(pageNumber - startingPoint === 0){
-                numberOfClothingRemaining = clothingContext.length - (POSTS_PER_PAGE * (pageNumber - 1));
-                paginatedShoes = shoesObservableContext.slice( (pageNumber - startingPoint) * POSTS_PER_PAGE, POSTS_PER_PAGE * (pageNumber - startingPoint + 1) - numberOfClothingRemaining);
-            }
-            else{
-                paginatedShoes = shoesObservableContext.slice( ((pageNumber - startingPoint) * POSTS_PER_PAGE) - numberOfClothingRemaining, POSTS_PER_PAGE * (pageNumber - startingPoint + 1) - numberOfClothingRemaining);
-            }
-        }
+  const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
+    let res;
+    if (type === PRODUCT_TYPE.CLOTHING) {
+      res = await fetch(`/clothing/${id}`, {
+        method: "DELETE",
+      });
+    } else {
+      res = await fetch(`/shoes/${id}`, {
+        method: "DELETE",
+      });
     }
 
+    if (res.ok) {
+      setProductContext(
+        productContext
+          .filter((product) => correctType(product, type))
+          .filter((product) => product.id !== id)
+      );
+      alert(
+        "Deletion of product will be completed after refresh...done without Rxjs, try deleting shoes for full responsiveness with Rxjs"
+      );
+    } else alert("Error deleting clothes!");
+  };
 
-    const deleteShoeById = async (id: number) => {
-        const res = await fetch(`${API_ROOT}/shoes/${id}`, {
-            method: 'DELETE',
-        });
+  if (productContext.length < 1) return <Redirect to={"/"} />;
+  else
+    return (
+      <>
+        <div className="margin-top-center">
+          <Pagination />
+        </div>
+        <section className="products">
+          {paginatedProducts.map((product: Clothing | Shoes) => (
+            <Product
+              key={product.id}
+              product={product}
+              hasAddToCart={true}
+              onDelete={deleteProductByIdAndType}
+            />
+          ))}
+        </section>
+      </>
+    );
+};
 
-        if(res.ok){ 
-            setShoesObservableContext(shoesObservableContext.filter(shoe => shoe.id !== id))
-            shoes$.next(shoesObservableContext.filter(shoe => shoe.id !== id));
-            console.log('deleted, ', id)
-        }
-        else{
-            alert('Error deleting this shoe!')
-        }
-    }
-
-    const deleteClothesById = async (id: number) => {
-        
-        const res = await fetch(`${API_ROOT}/clothing/${id}`, {
-            method: 'DELETE'    
-        });
-
-        if(res.ok){
-            setClothingContext(clothingContext.filter(clothes => clothes.id !== id));
-        }else{
-            alert('Error deleting clothes!')
-        }
-
-    }
-
-    
-    if(clothingContext.length + shoesObservableContext.length < 1)
-        return <Redirect to={'/'} />
-    else    
-        return (
-            <div>
-                <Pagination/>
-                <section className="cards-filtered" >
-                    {paginatedClothing.map((clothes: Clothing) =>(
-                        <Clothes key={clothes.id} clothes={clothes} hasAddToCart={true} onDelete={deleteClothesById}  />
-                    ))}
-                    {paginatedClothing.length < 6 && paginatedShoes.map((shoe: Shoes) =>(
-                        <Shoe key={shoe.id} shoe={shoe} hasAddToCart={true} onDelete={deleteShoeById}/>
-                    ))}
-                </section>
-            </div>
-        )
-}
-
-export default PageProducts
+export default PageProducts;

@@ -1,73 +1,59 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Clothing from "../components/Clothing";
-import { CartContext } from "../helpers/CartContext";
-import { Sex } from "../helpers/Enums";
+import { PRODUCT_TYPE, Sex } from "../helpers/Enums";
 import Models from "../helpers/Models";
+import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
 
 type Clothing = Models["Clothing"];
-type ClothingType = Models["ClothingType"];
 type Shoes = Models["Shoes"];
-type Shoesype = Models["ShoesType"];
 
-// const AddProduct = <T extends Models['Clothing']>() => {
-const AddProduct = ({ role }: { role: string }) => {
+const AddProduct = () => {
   const history = useHistory();
 
-  const [name, setName] = useState("");
-  const [details, setDetails] = useState("");
-  const [price, setPrice] = useState<number>(0);
-  const [img, setImg] = useState("");
-  const [brandName, setBrandName] = useState("");
-  const [sex, setSex] = useState<Sex>(Sex.MALE);
-  const [clothingTypeId, setClothingTypeId] = useState<number>(0);
-  const [shoesTypeId, setShoesTypeId] = useState<number>(0);
+  type ProductToAdd = {
+    name: string;
+    details: string;
+    price: number;
+    img: string;
+    brandName: string;
+    sex: Sex;
+    clothingTypeId: number;
+    shoesTypeId: number;
+  };
 
-  const { clothingContext, setClothingContext, shoes$ } =
-    useContext(CartContext);
+  const [productToAdd, setProductToAdd] = useState<Partial<ProductToAdd>>({});
+  const [productType, setProductType] = useState<PRODUCT_TYPE>(PRODUCT_TYPE.CLOTHING);
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductCartContext);
 
   function isClothing(product: Clothing | Shoes): product is Clothing {
     return "clothingType" in product;
   }
 
-  function isShoes(product: Clothing | Shoes): product is Shoes {
-    return "shoesType" in product;
-  }
-
-  const addClothing = async (clothing: Clothing) => {
+  const addProduct = async (product: Clothing | Shoes) => {
     try {
-      const res = await fetch("http://localhost:8080/clothing/save", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(clothing),
-      });
+      var res;
 
-      if (res && res.ok) {
-        const data = await res.json();
-        setClothingContext([...clothingContext, data]);
-        return data;
+      if (isClothing(product) && productType === PRODUCT_TYPE.CLOTHING) {
+        res = await fetch("/clothing/save", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(product),
+        });
+      } else {
+        res = await fetch("/shoes/save", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(product),
+        });
       }
-    } catch (e) {
-      console.log(e);
-    }
-    return;
-  };
-
-  const addShoes = async (shoes: Shoes) => {
-    try {
-      const res = await fetch("http://localhost:8080/shoes/save", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(shoes),
-      });
 
       if (res && res.ok) {
         const data = await res.json();
-        shoes$.next([...clothingContext, data]);
+        setProductContext([...productContext, data]);
         return data;
       }
     } catch (e) {
@@ -79,178 +65,198 @@ const AddProduct = ({ role }: { role: string }) => {
   const onSubmit = (e: any) => {
     e.preventDefault();
 
-    if (role === "CLOTHING")
-      addClothing({
-        id: 0,
-        name: name,
-        details: details,
-        price: price,
-        brandName: brandName,
-        img: img,
-        sex: sex,
-        clothingType: { id: clothingTypeId, type: "" },
-      });
-    else if (role === "SHOES")
-      addShoes({
-        id: 0,
-        name: name,
-        details: details,
-        price: price,
-        brandName: brandName,
-        img: img,
-        sex: sex,
-        shoesType: { id: shoesTypeId, type: "" },
-      });
-
     if (
-      !name ||
-      !details ||
-      !price ||
-      !img ||
-      !brandName ||
-      (!clothingTypeId && !shoesTypeId)
+      !productToAdd.name ||
+      !productToAdd.details ||
+      !productToAdd.price ||
+      !productToAdd.img ||
+      !productToAdd.brandName ||
+      (!productToAdd.clothingTypeId && !productToAdd.shoesTypeId)
     ) {
       alert("Please add all info");
       return;
     }
 
-    setName("");
-    setDetails("");
-    setPrice(0);
-    setImg("");
-    setBrandName("");
-    setSex(Sex.FEMALE);
-    setClothingTypeId(0);
-    setShoesTypeId(0);
+    if (productType === PRODUCT_TYPE.CLOTHING)
+      addProduct({
+        id: 0,
+        name: productToAdd.name ?? "",
+        details: productToAdd.details ?? "",
+        price: productToAdd.price ?? 0,
+        brandName: productToAdd.brandName ?? "",
+        img: productToAdd.img ?? "",
+        sex: productToAdd.sex ?? Sex.MALE,
+        clothingType: { id: productToAdd.clothingTypeId!, type: "" },
+      });
+    else if (productType === PRODUCT_TYPE.SHOES)
+      addProduct({
+        id: 0,
+        name: productToAdd.name ?? "",
+        details: productToAdd.details ?? "",
+        price: productToAdd.price ?? 0,
+        brandName: productToAdd.brandName ?? "",
+        img: productToAdd.img ?? "",
+        sex: productToAdd.sex ?? Sex.MALE,
+        shoesType: { id: productToAdd.shoesTypeId!, type: "" },
+      });
 
     history.push("/");
   };
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    e.preventDefault();
+    let value: string | number = e.target.value;
+
+    //* HTMLInputElement
+    if ("checked" in e.target) {
+      if (e.target.type === "number") value = parseInt(e.target.value);
+      else if (e.target.type === "checkbox") {
+        if (e.target.checked) value = Sex.FEMALE;
+        else value = Sex.MALE;
+      }
+    }
+    //* HTMLSelectElement
+    else {
+      if (e.target.name === "productType") {
+        value === PRODUCT_TYPE.CLOTHING
+          ? setProductType(PRODUCT_TYPE.CLOTHING)
+          : setProductType(PRODUCT_TYPE.SHOES);
+      }
+
+      value = parseInt(e.target.value);
+    }
+
+    productToAdd !== undefined
+      ? setProductToAdd({ ...productToAdd, [e.target.name]: value })
+      : setProductToAdd({ [e.target.name]: value });
+  };
+
   return (
-    <div /*  className = {isActiveAdd ? '' : 'hidden'} */>
-      <form className="add-form" onSubmit={onSubmit}>
-        <div className="form-group row mx-auto">
-          <div className="col-md-5 mx-auto">
-            <label>Name</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
+    <div>
+      <form className="add-product-container" onSubmit={onSubmit}>
+        <div className="type-to-add">
+          <label>Type to add</label>
+          <br />
+          <select
+            value={productType}
+            onChange={(e) => handleOnChange(e)}
+            name="productType"
+          >
+            <option value={PRODUCT_TYPE.CLOTHING}>Clothing</option>
+            <option value={PRODUCT_TYPE.SHOES}>Shoes</option>
+          </select>
+        </div>
+        <div>
+          <label>Name</label>
+          <br />
+          <input
+            type="text"
+            placeholder="Name"
+            value={productToAdd.name}
+            onChange={(e) => handleOnChange(e)}
+            name="name"
+          />
         </div>
         <br />
-        <div className="form-group row mx-auto">
-          <div className="col-md-5 mx-auto">
-            <label>Details</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Details"
-              value={details}
-              onChange={(e) => setDetails(e.target.value)}
-            />
-          </div>
+        <div>
+          <label>Details</label>
+          <br />
+          <input
+            type="text"
+            placeholder="Details"
+            value={productToAdd.details}
+            onChange={(e) => handleOnChange(e)}
+            name="details"
+          />
         </div>
         <br />
-        <div className="form-group row mx-auto">
-          <div className="col-md-5 mx-auto">
-            <label>Price</label>
-            <input
-              className="form-control"
-              type="number"
-              placeholder="Price"
-              value={price}
-              onChange={(e) => setPrice(parseInt(e.target.value))}
-            />
-          </div>
+        <div>
+          <label>Price</label>
+          <br />
+          <input
+            type="number"
+            placeholder="Price"
+            value={productToAdd.price}
+            onChange={(e) => handleOnChange(e)}
+            name="price"
+          />
         </div>
         <br />
-        <div className="form-group row mx-auto">
-          <div className="col-md-5 mx-auto">
-            <label>Image url</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Image url"
-              value={img}
-              onChange={(e) => setImg(e.target.value)}
-            />
-          </div>
+        <div>
+          <label>Image url</label>
+          <br />
+          <input
+            type="text"
+            placeholder="Image url"
+            value={productToAdd.img}
+            onChange={(e) => handleOnChange(e)}
+            name="img"
+          />
         </div>
         <br />
-        <div className="form-group row mx-auto">
-          <div className="col-md-5 mx-auto">
-            <label>Brand name</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Brand name"
-              value={brandName}
-              onChange={(e) => setBrandName(e.target.value)}
-            />
-          </div>
+        <div>
+          <label>Brand name</label>
+          <br />
+          <input
+            type="text"
+            placeholder="Brand name"
+            value={productToAdd.brandName}
+            onChange={(e) => handleOnChange(e)}
+            name="brandName"
+          />
         </div>
         <br />
-        <div className="form-group row mx-auto">
-          <div className="col-md-5 mx-auto">
-            <label className="form-check-label"> Sex &nbsp;&nbsp;</label>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={(e) => {
-                if (e.target.checked) setSex(Sex.FEMALE);
-                else setSex(Sex.MALE);
-              }}
-            />
-            <br />
-            <span style={{ color: "grey", fontSize: "0.8rem" }}>
-              (Checked - 'FEMALE', Unchecked - 'MALE')
-            </span>
-          </div>
-        </div>
-        <br />
-        {role === "CLOTHING" ? (
-          <div className="form-group row mx-auto">
-            <div className="col-md-5 mx-auto">
-              <label>Clothing type</label>
-              <select
-                className="form-select"
-                value={clothingTypeId}
-                onChange={(e) => setClothingTypeId(parseInt(e.target.value))}
-              >
-                <option value="0"></option>
-                <option value="1">Hoodie</option>
-                <option value="2">Shirt</option>
-                <option value="3">Jeans</option>
-              </select>
-            </div>
-          </div>
-        ) : (
-          <div className="form-group row mx-auto">
-            <div className="col-md-5 mx-auto">
-              <label>Shoes type</label>
-              <select
-                className="form-select"
-                value={shoesTypeId}
-                onChange={(e) => setShoesTypeId(parseInt(e.target.value))}
-              >
-                <option value="0"></option>
-                <option value="1">Sneakers</option>
-                <option value="2">Flip-Flops</option>
-                <option value="3">Sport</option>
-              </select>
-            </div>
-          </div>
+        {productType && (
+          <>
+            {productType === PRODUCT_TYPE.CLOTHING ? (
+              <div>
+                <label>Clothing type</label>
+                <br />
+                <select
+                  value={productToAdd.clothingTypeId}
+                  onChange={(e) => handleOnChange(e)}
+                  name="clothingTypeId"
+                >
+                  <option value="0"></option>
+                  <option value="1">Hoodie</option>
+                  <option value="2">Shirt</option>
+                  <option value="3">Jeans</option>
+                </select>
+              </div>
+            ) : (
+              <div>
+                <label>Shoes type</label>
+                <br />
+                <select
+                  value={productToAdd.shoesTypeId}
+                  onChange={(e) => handleOnChange(e)}
+                  name="shoesTypeId"
+                >
+                  <option value="0"></option>
+                  <option value="1">Sneakers</option>
+                  <option value="2">Flip-Flops</option>
+                  <option value="3">Sport</option>
+                </select>
+              </div>
+            )}
+          </>
         )}
         <br />
-        <input
-          type="submit"
-          value="Save Product"
-          className="btn btn-success btn-block"
-        />
+        <div>
+          <label> Sex &nbsp;</label>
+          <input
+            className="sex"
+            type="checkbox"
+            value={productToAdd.sex}
+            onChange={(e) => handleOnChange(e)}
+            name="sex"
+          />
+          <br />
+          <span>(Checked - 'FEMALE', Unchecked - 'MALE')</span>
+        </div>
+        <br />
+        <br />
+        <input type="submit" value="Save Product" className="save-product-button" />
       </form>
     </div>
   );

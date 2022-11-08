@@ -1,7 +1,6 @@
+import Models from '../helpers/Models';
 import { ActionAuthenticateUser, ActionFetchUsers } from "./ActionsUser";
 import { ActionType } from "./ActionTypesUser";
-import Models from '../helpers/Models'
-import { Action } from "rxjs/internal/scheduler/Action";
 
 interface StateFetchUsers {
   loading: boolean,

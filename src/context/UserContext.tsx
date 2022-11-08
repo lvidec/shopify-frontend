@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import Models from "./Models";
+import Models from "../helpers/Models";
 
 type User = Models['User'];
 

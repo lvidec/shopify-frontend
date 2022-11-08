@@ -1,83 +1,35 @@
 import { Link } from "react-router-dom";
-import "../App.css";
-import { isAdmin, isAuthenticated } from '../service/AuthService';
+import { isAdmin, isAuthenticated } from "../service/AuthService";
 
 const Navigation: React.FC = () => {
-
-
   return (
     <>
-      <nav
-        className="navbar navbar-expand-md navbar-dark bg-dark"
-        aria-label="Fifth navbar example"
-      >
-        <div className="container-fluid">
-          <Link className="navbar-brand" style={{pointerEvents: 'none'}} to="#">
+      <nav className="nav-container">
+        <div className="nav-left">
+          <Link className="link link-important" to="#">
             Shopify
           </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarsExample05"
-            aria-controls="navbarsExample05"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="collapse navbar-collapse" id="navbarsExample05">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                {isAuthenticated() ? 
-                  <Link className="nav-link" to="/user-dashboard">
-                    Dashboard
-                  </Link>
-                :
-                  <Link className="nav-link" to="/login">
-                    Login
-                  </Link>}
-              </li>
-            </ul>
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0 flex-fill justify-content-center" >
-              <li className="nav-item">
-                {isAdmin() && <a className="nav-link" style={{color: 'royalblue',pointerEvents: 'none', paddingLeft: '150px'}} >ADMIN MODE</a>}
-              </li>
-            </ul>
-            <ul className="row navbar-nav me-auto mb-2 mb-lg-0 float-end" >
-              <li className="nav-item">
-                <Link className="nav-link" style={{padding: '2px'}} aria-current="page" to="/add-clothing">
-                  Add clothing(Admin)
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" style={{padding: '2px'}} aria-current="page" to="/add-shoes">
-                  Add shoes(Admin)
-                </Link>
-              </li>
-            </ul>
-            <ul className="row navbar-nav me-auto mb-2 mb-lg-0 float-end" >
-              <li className="nav-item">
-                <Link className="nav-link" aria-current="page" to="/cart">
-                  <i className='fa fa-shopping-cart fa-2x'></i>
-                </Link>
-              </li>
-            </ul>
-            {/* <form>
-              <input
-                className="form-control"
-                type="text"
-                placeholder="Search"
-                aria-label="Search"
-              />
-            </form> */}
-          </div>
+          <Link className="link" aria-current="page" to="/">
+            Home
+          </Link>
+          {isAuthenticated() ? (
+            <Link className="link" to="/user-dashboard">
+              Dashboard
+            </Link>
+          ) : (
+            <Link className="link" to="/login">
+              Login
+            </Link>
+          )}
+        </div>
+        {isAdmin() && <button>ADMIN MODE</button>}
+        <div className="nav-right">
+          <Link className="link" aria-current="page" to="/add-product">
+            Add Product (Admin)
+          </Link>
+          <Link className="link" aria-current="page" to="/cart">
+            <i className="fa fa-shopping-cart fa-2x"></i>
+          </Link>
         </div>
       </nav>
     </>

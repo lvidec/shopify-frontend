@@ -1,78 +1,67 @@
-import { useContext, useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import { CartContext } from '../helpers/CartContext';
-import Clothes from './Clothes';
-import Clothing from './Clothing';
-import Models from '../helpers/Models';
-import Shoe from './Shoe';
-import Shoes from './Shoes';
-import { API_ROOT } from '../App';
+import { useContext } from "react";
+import { Redirect } from "react-router-dom";
+import { ProductCartContext, ProductContextTypes } from "../context/ProductCartContext";
+import { PRODUCT_TYPE } from "../helpers/Enums";
+import Models from "../helpers/Models";
+import Product from "./Product";
 
+type Clothing = Models["Clothing"];
+type Shoes = Models["Shoes"];
 
-type Clothing = Models['Clothing'];
-type Shoes = Models['Shoes'];
+const ProductDetailsCategory = ({ match }: any) => {
 
-const ProductDetailsCategory = ( {match}: any ) => {
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductCartContext);
 
-    const {clothingContext, setClothingContext, shoes$} = useContext(CartContext);
+  let filteredProducts: (Clothing | Shoes)[] = productContext.filter(
+    (product) => product.brandName === match.params.id
+  );
 
-    const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
+  const correctType = (
+    product: Clothing | Shoes,
+    type: PRODUCT_TYPE
+  ): boolean => {
+    return type in product;
+  };
 
-    useEffect(() => {
-        const subscription = shoes$.subscribe(setShoesObservableContext);
-        return () => subscription.unsubscribe(); 
-    }, [])
-
-    let filteredClothing: Clothing[] = clothingContext.filter(clothes => clothes.brandName === match.params.id);
-    let filteredShoes: Shoes[] = shoesObservableContext.filter(shoes => shoes.brandName === match.params.id);
-
-
-    const deleteShoeById = async (id: number) => {
-        const res = await fetch(`${API_ROOT}/shoes/${id}`, {
-            method: 'DELETE',
-        });
-
-        if(res.ok){ 
-            setShoesObservableContext(shoesObservableContext.filter(shoe => shoe.id !== id))
-            shoes$.next(shoesObservableContext.filter(shoe => shoe.id !== id));
-        }
-        else{
-            alert('Error deleting this shoe!')
-        }
+  const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
+    let res;
+    if (type === PRODUCT_TYPE.CLOTHING) {
+      res = await fetch(`/clothing/${id}`, {
+        method: "DELETE",
+      });
+    } else {
+      res = await fetch(`/shoes/${id}`, {
+        method: "DELETE",
+      });
     }
 
-    const deleteClothesById = async (id: number) => {
-        
-        const res = await fetch(`${API_ROOT}/clothing/${id}`, {
-            method: 'DELETE'    
-        });
+    if (res.ok) {
+      setProductContext(
+        productContext
+          .filter((product) => correctType(product, type))
+          .filter((product) => product.id !== id)
+      );
+      alert(
+        "Deletion of clothes will be completed after refresh...done without Rxjs, try deleting shoes for full responsiveness with Rxjs"
+      );
+    } else alert("Error deleting clothes!");
 
-        if(res.ok){
-            setClothingContext(clothingContext.filter(clothes => clothes.id !== id));
-        }else{
-            alert('Error deleting clothes!')
-        }
+  };
 
-    }
+  if (productContext.length < 1) return <Redirect to={"/"} />;
+  else
+    return (
+      <div className="products margin-top-center">
+          {filteredProducts.map((product: Clothing | Shoes) => (
+            <Product
+              key={product.id}
+              product={product}
+              hasAddToCart={true}
+              onDelete={deleteProductByIdAndType}
+              />
+          ))}
+      </div>
+    );
+};
 
-
-
-    if(clothingContext.length + shoesObservableContext.length < 1)
-        return <Redirect to={'/'} />
-    else    
-        return (
-            
-            <div>
-                <section className="cards-filtered" >
-                    {filteredClothing.map((clothes: Clothing) =>(
-                        <Clothes key={clothes.id} clothes={clothes} hasAddToCart={true} onDelete={deleteClothesById} />
-                    ))}
-                    {filteredShoes.map((shoe: Shoes) =>(
-                        <Shoe key={shoe.id} shoe={shoe} hasAddToCart={true} onDelete={deleteShoeById}/>
-                    ))}
-                </section>
-            </div>
-        )
-}
-
-export default ProductDetailsCategory
+export default ProductDetailsCategory;

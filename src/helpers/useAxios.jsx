@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 // interface AxiosProps{
 //     url: string;
@@ -9,11 +9,9 @@ import { useState, useEffect } from 'react';
 //     body: any;
 // }
 
-// const useAxios: React.FC<AxiosProps> = ({url, method, headers, body}) => {
 const useAxios = ({ url, method, headers = null, body = null }) => {
    const [response, setResponse] = useState(null);
    const [error, setError] = useState('');
-//    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {

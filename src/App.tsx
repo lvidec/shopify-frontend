@@ -1,23 +1,18 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.css";
 import Navigation from "./components/Navigation";
+import NotFound from "./components/NotFound";
+import PageProducts from "./components/PageProducts";
+import ProductDetailsCategory from "./components/ProductDetails";
 import Models from "./helpers/Models";
-import { CartContext } from "./helpers/CartContext";
+import { ProductCartContext } from "./context/ProductCartContext";
+import ProtectedRoute from "./helpers/ProtectedRoute";
+import AddProduct from "./pages/AddProduct";
+import Cart from "./pages/Cart";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import UserDashboard from "./pages/UserDashboard";
-import ProductDetailsCategory from "./components/ProductDetails";
-import AddProduct from "./pages/AddProduct";
-import ProtectedRoute from "./helpers/ProtectedRoute";
-import Cart from "./pages/Cart";
-import NotFound from "./components/NotFound";
-import Home from "./pages/Home";
-import { useObservableState } from "observable-hooks";
-import { BehaviorSubject } from "rxjs";
-import Pagination from "./components/Pagination";
-import PageProducts from "./components/PageProducts";
 
-export const API_ROOT = "http://localhost:8080";
 export const POSTS_PER_PAGE = 6;
 
 export const ROUTES = {
@@ -28,40 +23,56 @@ export const ROUTES = {
   ADD_CLOTHING: "/add-clothing",
   ADD_SHOES: "/add-shoes",
   CART: "/cart",
+  ADD_PRODUCT: "/add-product",
 };
-
-type Clothing = Models["Clothing"];
-type Shoes = Models["Shoes"];
-type User = Models["User"];
 
 const App: React.FC = () => {
   type Clothing = Models["Clothing"];
   type Shoes = Models["Shoes"];
 
-  const [clothingContext, setClothingContext] = useState<Clothing[]>([]);
-  // const [shoesContext, setShoesContext] = useState<Shoes[]>([]);
+  const [productContext, setProductContext] = useState<(Clothing | Shoes)[]>([]);
 
-  let shoes$ = useMemo(() => new BehaviorSubject<Shoes[]>([]), []);
-  const productsMemo = useMemo(
-    () => ({
-      clothingContext,
-      setClothingContext,
-      // shoesContext,
-      // setShoesContext,
-      shoes$,
-    }),
-    // [clothingContext, setClothingContext, shoesContext, setShoesContext]
-    [clothingContext, setClothingContext, shoes$]
-  );
-
-  const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>(
-    []
-  );
   useEffect(() => {
-    const subscription = shoes$.subscribe(setShoesObservableContext);
-  }, [shoes$]);
+    (async () => {
+      const res = await fetch("/clothing");
+      const data: Clothing[] = await res.json();
+      
+      if (data !== null) {
+        if (productContext !== undefined) {
+          console.table(data);
+          setProductContext((prevProductContext) => [...prevProductContext, ...data]);
+        } else {
+          console.table(data);
+          setProductContext(data);
+        }
+      }
+    })();
+  }, []);
 
-  const totalPosts = clothingContext.length + shoesObservableContext.length;
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/shoes");
+      const data: Shoes[] = await res.json();
+
+      if (data !== null) {
+        if (productContext !== undefined) {
+          setProductContext((prevProductContext) => [...prevProductContext, ...data]);
+        } else {
+          setProductContext(data);
+        }
+      }
+    })();
+  }, []);
+
+  const productsCartMemo = useMemo(
+    () => ({
+      productContext,
+      setProductContext,
+    }),
+    [productContext]
+  );
+
+  const totalPosts = productContext.length;
   let pageNumbers = [];
   if (totalPosts !== 0) {
     for (let i = 1; i <= Math.ceil(totalPosts / POSTS_PER_PAGE); i++) {
@@ -71,54 +82,34 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="Web-Shop App">
+      <div className="flex-wrapper">
         <Navigation />
         <Switch>
           <Route exact path={ROUTES.LOGIN} component={Login} />
           <Route exact path={ROUTES.USER_DASHBOARD} component={UserDashboard} />
           <ProtectedRoute
             exact
-            path={ROUTES.ADD_CLOTHING}
+            path={ROUTES.ADD_PRODUCT}
             shouldBeAdmin={true}
-            render={() => <AddProduct role={"CLOTHING"} />}
-          />
-          <ProtectedRoute
-            exact
-            path={ROUTES.ADD_SHOES}
-            shouldBeAdmin={true}
-            render={() => <AddProduct role={"SHOES"} />}
+            render={() => <AddProduct />}
           />
           <ProtectedRoute
             exact
             path={ROUTES.CART}
             shouldBeAdmin={false}
-            render={() => (
-              <Cart
-                clothing={productsMemo.clothingContext}
-                // shoes={productsMemo.shoesContext}
-                shoes$={productsMemo.shoes$}
-              />
-            )}
+            render={() => <Cart products={productContext} />}
           />
-          <CartContext.Provider value={productsMemo}>
+          <ProductCartContext.Provider value={productsCartMemo}>
             <Route exact path={ROUTES.HOME} component={Home} />
             {pageNumbers.length &&
               pageNumbers.map((number, index) => (
-                <Route
-                key={index}
-                exact
-                path={`/page-${number}`}
-                component={PageProducts}
-                />
-                ))}
-            <Route
-              exact
-              path={ROUTES.PRODUCT_DETAILS}
-              component={ProductDetailsCategory}
-            />
-          </CartContext.Provider>
+                <Route key={index} exact path={`/page-${number}`} component={PageProducts} />
+              ))}
+            <Route exact path={ROUTES.PRODUCT_DETAILS} component={ProductDetailsCategory} />
+          </ProductCartContext.Provider>
           <Route component={NotFound} />
         </Switch>
+        <footer>Shopify</footer>
       </div>
     </Router>
   );

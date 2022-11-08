@@ -1,42 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
-import { CartContext } from "../helpers/CartContext";
-import Models from "../helpers/Models";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { POSTS_PER_PAGE } from "../App";
+import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
 
-const Pagination: React.FC = () => {
-  type Clothing = Models["Clothing"];
-  type Shoes = Models["Shoes"];
-
-  const { clothingContext, shoes$ } = useContext(CartContext);
-
-  const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>(
-    []
-  );
-
-  useEffect(() => {
-    const subscription = shoes$.subscribe(setShoesObservableContext);
-    return () => subscription.unsubscribe();
-  }, []);
+const Pagination = () => {
+  const { productContext } = useContext<ProductContextTypes>(ProductCartContext);
 
   const pageNumbers = [];
-  const totalPosts = clothingContext.length + shoesObservableContext.length;
+  const totalPosts = productContext.length;
 
   for (let i = 1; i <= Math.ceil(totalPosts / POSTS_PER_PAGE); i++) {
     pageNumbers.push(i);
   }
 
   return (
-    <nav className="container">
-      <ul className="pagination flex-fill justify-content-center">
-        {pageNumbers.map((number, index) => (
-          <li key={index}>
-              <Link to={`/page-${number}`} className="page-link">
-                {number}
-              </Link>
-          </li>
-        ))}
-      </ul>
+    <nav className="pagination">
+      {pageNumbers.map((number, index) => (
+        <li key={index}>
+          <Link to={`/page-${number}`}>
+            {number}
+          </Link>
+        </li>
+      ))}
     </nav>
   );
 };

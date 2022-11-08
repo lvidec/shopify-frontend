@@ -1,7 +1,6 @@
 import { destroyLocalClothing, destroyLocalShoes, destroyToken, destroyUser, getUser } from "./StorageService"
 
 const logout = () => {
-    // setUser(null);
     destroyToken();
     destroyUser();
     destroyLocalClothing();

@@ -1,66 +1,96 @@
-import { Redirect } from 'react-router-dom';
-import { getLocalClothing, getLocalShoes, setLocalClothing, setLocalShoes } from '../service/StorageService';
-import Clothes from '../components/Clothes';
-import Models from '../helpers/Models';
-import Shoe from '../components/Shoe';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { BehaviorSubject } from 'rxjs'
-import { CartContext } from '../helpers/CartContext';
+import { Redirect } from "react-router-dom";
+import Product from "../components/Product";
+import Models from "../helpers/Models";
+import {
+  destroyLocalClothesWithId,
+  destroyLocalShoeWithId,
+  getLocalClothing,
+  getLocalShoes,
+} from "../service/StorageService";
 
+type Clothing = Models["Clothing"];
+type Shoes = Models["Shoes"];
 
-type Clothing = Models['Clothing'];
-type Shoes = Models['Shoes'];
-
-interface CartProps{
-    clothing: Clothing[];
-    // shoes: Shoes[];
-    shoes$: BehaviorSubject<Shoes[]>;
+interface CartProps {
+  products: (Clothing | Shoes)[];
 }
 
-const Cart: React.FC<CartProps> = ({clothing, shoes$}) => {
+const Cart = ({ products }: CartProps) => {
+  function isClothing(product: Clothing | Shoes): product is Clothing {
+    return "clothingType" in product;
+  }
 
-    const [shoesObservableContext, setShoesObservableContext] = useState<Shoes[]>([]);
+  function isShoes(product: Clothing | Shoes): product is Shoes {
+    return "shoesType" in product;
+  }
 
-    useEffect(() => {
-        const subscription = shoes$.subscribe(setShoesObservableContext);
-        return () => subscription.unsubscribe(); 
-    }, [shoes$])
+  let filteredClothing: Clothing[] | undefined;
+  if (getLocalClothing().length) {
+    filteredClothing = products.filter(isClothing);
+    filteredClothing = filteredClothing?.filter((clothes) =>
+      getLocalClothing().includes(clothes.id)
+    );
+  }
 
-    let filteredClothing: Clothing[] | null = null;
-    if(getLocalClothing().length)
-        filteredClothing = clothing.filter(clothes => getLocalClothing().includes(clothes.id));
-    
-    
-    let filteredShoes: Shoes[] | null = null;
-    if(getLocalShoes().length)
-        filteredShoes = shoesObservableContext.filter(shoes => getLocalShoes().includes(shoes.id));
-    
-    let totalPriceClothing: number | undefined = filteredClothing?.reduce((a, {price}) => a + price, 0);
-    let totalPriceShoes: number | undefined = filteredShoes?.reduce((a, {price}) => a + price, 0);
-    
-    if(totalPriceClothing === undefined) totalPriceClothing = 0;
-    if(totalPriceShoes === undefined) totalPriceShoes = 0;
+  let filteredShoes: Shoes[] | undefined;
+  if (getLocalShoes().length) filteredShoes = products.filter(isShoes);
+  filteredShoes = filteredShoes?.filter((shoe) => getLocalShoes().includes(shoe.id));
 
-    
-    if(clothing.length + shoesObservableContext.length < 1){
-        return <Redirect to='/'/> 
+  let totalPriceClothing: number | undefined = filteredClothing?.reduce(
+    (a, { price }) => a + price,
+    0
+  );
+  let totalPriceShoes: number | undefined = filteredShoes?.reduce((a, { price }) => a + price, 0);
+
+  if (totalPriceClothing === undefined) totalPriceClothing = 0;
+  if (totalPriceShoes === undefined) totalPriceShoes = 0;
+
+  const handleDelete = (product: Clothing | Shoes) => {
+    if (isClothing(product)) {
+      destroyLocalClothesWithId(product.id);
+      if (totalPriceClothing) {
+        totalPriceClothing -= product.price;
+      }
+    } else {
+      destroyLocalShoeWithId(product.id);
+      if (totalPriceShoes) {
+        totalPriceShoes -= product.price;
+      }
     }
-    else if(!filteredClothing && !filteredShoes) {
-        return <h2>Empty Cart</h2>
-    }else
-        return (
-            <div>
-                <h2>Total price: <span className="price">$ {totalPriceClothing + totalPriceShoes}</span></h2>
-                <section className="cards-filtered" >
-                    {filteredClothing && filteredClothing.map((clothes: Clothing) =>(
-                        <Clothes key={clothes.id} clothes={clothes} hasAddToCart={false} />
-                    ))}
-                    {filteredShoes && filteredShoes.map((shoe: Shoes) =>(
-                        <Shoe key={shoe.id} shoe={shoe} hasAddToCart={false} />
-                    ))}
-                </section>
-            </div>
-        )
-}
+  };
+
+  if (products.length < 1) {
+    return <Redirect to="/" />;
+  } else if (!filteredClothing && !filteredShoes) {
+    return <h2>Empty Cart</h2>;
+  } else
+    return (
+      <div className="margin-top-center">
+        <h2>
+          Total price: <span>$ {totalPriceClothing + totalPriceShoes}</span>
+        </h2>
+        <section className="products button-red">
+          {filteredClothing &&
+            filteredClothing.map((clothes: Clothing) => (
+              <Product
+                key={clothes.id}
+                product={clothes}
+                onDelete={() => handleDelete(clothes)}
+                hasAddToCart={false}
+              />
+            ))}
+          {filteredShoes &&
+            filteredShoes.map((shoe: Shoes) => (
+              <Product
+                key={shoe.id}
+                product={shoe}
+                onDelete={() => handleDelete(shoe)}
+                hasAddToCart={false}
+              />
+            ))}
+        </section>
+      </div>
+    );
+};
 
 export default Cart;

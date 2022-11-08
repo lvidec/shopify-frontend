@@ -1,12 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { useState, useEffect } from "react";
-import Models from "./Models";
-
-
-type Clothing = Models['Clothing'];
-type Shoes = Models['Shoes'];
-type User = Models['User'];
-
+import { useEffect, useState } from "react";
 
 
 const useFetch = ({
@@ -37,7 +29,7 @@ const useFetch = ({
         );
         const data = await res.json();
         setResponse(data);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
         setError(error);
       }

@@ -1,13 +1,9 @@
-import { Dispatch } from "redux";
-import { ActionType } from "./ActionTypesUser";
-import { ActionAuthenticateUser, ActionFetchUsers } from "./ActionsUser";
-import { any } from "prop-types";
 import axios from "axios";
-import Models from "../helpers/Models";
-import { API_ROOT } from "../App";
 import jwtDecode from "jwt-decode";
+import { Dispatch } from "redux";
 import { setTokenLocal, setUserLocal } from "../service/StorageService";
-import { Action } from "rxjs/internal/scheduler/Action";
+import { ActionAuthenticateUser, ActionFetchUsers } from "./ActionsUser";
+import { ActionType } from "./ActionTypesUser";
 
 export const fetchAllUsers = () => {
   return (dispatch: Dispatch<ActionFetchUsers>) => {
@@ -16,7 +12,7 @@ export const fetchAllUsers = () => {
       type: ActionType.FETCH_USERS_REQUEST,
     });
     axios
-      .get(`${API_ROOT}/user`)
+      .get(`/user`)
       .then((response: any) => {
         const users = response.data;
         // dispatch(fetchUsersSuccess(users))
@@ -38,7 +34,7 @@ export const fetchAllUsers = () => {
 export const fetchAuthenticate = (username: string, password: string) => {
   return async (dispatch: Dispatch<ActionAuthenticateUser>) => {
     axios
-      .post(API_ROOT + "/api/authenticate", {
+      .post("/api/authenticate", {
         username,
         password,
       })
@@ -61,7 +57,7 @@ export const fetchAuthenticate = (username: string, password: string) => {
         });
       });
 // try{
-//     const resToken = await axios.post(API_ROOT + "/api/authenticate", { username, password });
+//     const resToken = await axios.post("/api/authenticate", { username, password });
   
 //     const userAuthentication = resToken.data;
     
