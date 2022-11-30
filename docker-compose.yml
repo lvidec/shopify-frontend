@@ -1,24 +1,68 @@
 version: "3.8"
 
+volumes:
+  db:
+
+# Could also use the auto generated compose network
+networks:
+  shopify_app:
+
 services:
+  shopify-db:
+    image: mysql:5.7
+    container_name: shopify-db
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${SHOPIFY_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${SHOPIFY_ROOT_PASSWORD}
+      MYSQL_USER: ${SHOPIFY_USER}
+      MYSQL_PASSWORD: ${SHOPIFY_PASSWORD}
+    # ports 3306 and 33060 are exposed by the image
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - shopify_app
+
   shopify-backend:
     image: shopify-backend
+    restart: unless-stopped
+    depends_on:
+      - shopify-db
     container_name: shopify-backend
-    build: ./../shopify-backend
+    build: ../shopify-backend
     ports: 
       - 8080:8080
     environment:
-      - SPRING.PROFILES.ACTIVE=default
-    volumes:
-      - ../shopify-backend:/usr/src/app
+      DB_URL: shopify-db:3306/${SHOPIFY_DATABASE}
+      DB_USERNAME: ${SHOPIFY_USER}
+      DB_PASSWORD: ${SHOPIFY_PASSWORD}
+    networks:
+      - shopify_app
 
   shopify-frontend:
     build: ./
     image: shopify-frontend
+    restart: unless-stopped
+    depends_on:
+      - shopify-backend
     container_name: shopify-frontend
     ports:
       - 3000:3000
-    links:
-      - shopify-backend
-    volumes:
-      - ./:/app
+    networks:
+      - shopify_app
+
+# LOCAL USE ONLY
+#  adminer:
+#    image: adminer
+#    restart: unless-stopped
+#    ports:
+#      - 8081:8080
+#    networks:
+#      - shopify_app
+
+# RECOMMENDED INTERACTION
+# START:  docker-compose up
+# PAUSE:  docker-compose stop
+# RESUME: docker-compose start
+# CLEAN:  docker-compose down --volumes
