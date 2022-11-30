@@ -169,7 +169,6 @@ li {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 75%;
     height: fit-content;
 
     img {
@@ -348,6 +347,7 @@ li {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  padding-bottom: 4em;
 
   .product-card {
     flex-basis: 48%;
@@ -418,8 +418,7 @@ li {
 footer {
   font-size: 3em;
   color: white;
-  text-align: center;
-  padding: 4rem 0;
+  padding: 4rem 3rem;
   background-color: $nav-color;
 }
 

@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import UserDashboard from "./pages/UserDashboard";
 
-export const POSTS_PER_PAGE = 6;
+export const POSTS_PER_PAGE = 9;
 
 export const ROUTES = {
   HOME: "/",
