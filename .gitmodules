@@ -1,0 +1,3 @@
+[submodule "shopify-backend"]
+	path = shopify-backend
+	url = https://github.com/lvidec/shopify-backend.git

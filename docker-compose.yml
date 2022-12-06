@@ -30,7 +30,7 @@ services:
     depends_on:
       - shopify-db
     container_name: shopify-backend
-    build: ../shopify-backend
+    build: ./shopify-backend
     ports: 
       - 8080:8080
     environment:
