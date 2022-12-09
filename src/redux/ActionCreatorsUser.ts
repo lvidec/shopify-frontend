@@ -57,7 +57,7 @@ export const fetchAuthenticate = (username: string, password: string) => {
         });
       });
 // try{
-//     const resToken = await axios.post("/api/authenticate", { username, password });
+//     const resToken = await axios.post(PROXY + "/api/authenticate", { username, password });
   
 //     const userAuthentication = resToken.data;
     

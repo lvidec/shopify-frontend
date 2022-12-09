@@ -33,7 +33,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://shopify-backend:8080",
   "eslintConfig": {
     "extends": [
       "react-app",

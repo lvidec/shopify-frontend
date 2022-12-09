@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import { PROXY } from "../App";
 import Models from "../helpers/Models";
 import { fetchAllUsers } from "../redux/ActionCreatorsUser";
 import { getToken, setTokenLocal, setUserLocal } from "../service/StorageService";
@@ -29,7 +30,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const resToken = await axios.post("/api/authenticate", {
+      const resToken = await axios.post(PROXY + "/api/authenticate", {
         username,
         password,
       });

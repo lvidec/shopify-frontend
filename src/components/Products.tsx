@@ -3,6 +3,7 @@ import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
 import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
 import Product from "./Product";
+import { PROXY } from "../App";
 
 const Products = ({ search }: { search: string }) => {
   type Clothing = Models["Clothing"];
@@ -16,11 +17,11 @@ const Products = ({ search }: { search: string }) => {
 
     let res;
     if (type === PRODUCT_TYPE.CLOTHING) {
-      res = await fetch(`/clothing/${id}`, {
+      res = await fetch(PROXY + `/clothing/${id}`, {
         method: "DELETE",
       });
     } else {
-      res = await fetch(`/shoes/${id}`, {
+      res = await fetch(PROXY + `/shoes/${id}`, {
         method: "DELETE",
       });
     }

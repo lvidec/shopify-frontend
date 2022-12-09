@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Redirect } from "react-router-dom";
-import { POSTS_PER_PAGE } from "../App";
+import { POSTS_PER_PAGE, PROXY } from "../App";
 import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
 import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
@@ -36,11 +36,11 @@ const PageProducts = ({ match }: any) => {
   const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
     let res;
     if (type === PRODUCT_TYPE.CLOTHING) {
-      res = await fetch(`/clothing/${id}`, {
+      res = await fetch(PROXY + `/clothing/${id}`, {
         method: "DELETE",
       });
     } else {
-      res = await fetch(`/shoes/${id}`, {
+      res = await fetch(PROXY + `/shoes/${id}`, {
         method: "DELETE",
       });
     }

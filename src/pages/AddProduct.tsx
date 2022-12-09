@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { PRODUCT_TYPE, Sex } from "../helpers/Enums";
 import Models from "../helpers/Models";
 import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import { PROXY } from "../App";
 
 type Clothing = Models["Clothing"];
 type Shoes = Models["Shoes"];
@@ -34,7 +35,7 @@ const AddProduct = () => {
       var res;
 
       if (isClothing(product) && productType === PRODUCT_TYPE.CLOTHING) {
-        res = await fetch("/clothing/save", {
+        res = await fetch(PROXY + "/clothing/save", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -42,7 +43,7 @@ const AddProduct = () => {
           body: JSON.stringify(product),
         });
       } else {
-        res = await fetch("/shoes/save", {
+        res = await fetch(PROXY + "/shoes/save", {
           method: "POST",
           headers: {
             "Content-type": "application/json",

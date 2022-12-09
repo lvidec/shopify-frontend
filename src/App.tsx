@@ -26,6 +26,8 @@ export const ROUTES = {
   ADD_PRODUCT: "/add-product",
 };
 
+export const PROXY = process.env.REACT_APP_PROXY_HOST;
+
 const App: React.FC = () => {
   type Clothing = Models["Clothing"];
   type Shoes = Models["Shoes"];
@@ -34,7 +36,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/clothing");
+      const res = await fetch(PROXY + "/clothing");
       const data: Clothing[] = await res.json();
       
       if (data !== null) {
@@ -51,7 +53,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/shoes");
+      const res = await fetch(PROXY + "/shoes");
       const data: Shoes[] = await res.json();
 
       if (data !== null) {
