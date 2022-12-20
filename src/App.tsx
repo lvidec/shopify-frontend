@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import NotFound from "./components/NotFound";
 import PageProducts from "./components/PageProducts";
 import ProductDetailsCategory from "./components/ProductDetails";
-import Models from "./helpers/Models";
 import { ProductCartContext } from "./context/ProductCartContext";
+import Models from "./helpers/Models";
 import ProtectedRoute from "./helpers/ProtectedRoute";
 import AddProduct from "./pages/AddProduct";
 import Cart from "./pages/Cart";
@@ -33,7 +33,7 @@ const App: React.FC = () => {
   type Shoes = Models["Shoes"];
 
   const [productContext, setProductContext] = useState<(Clothing | Shoes)[]>([]);
-
+ 
   useEffect(() => {
     (async () => {
       const res = await fetch(PROXY + "/clothing");
@@ -41,25 +41,27 @@ const App: React.FC = () => {
       
       if (data !== null) {
         if (productContext !== undefined) {
-          console.table(data);
+          console.log(data);
           setProductContext((prevProductContext) => [...prevProductContext, ...data]);
         } else {
-          console.table(data);
+          console.log(data);
           setProductContext(data);
         }
       }
     })();
   }, []);
-
+  
   useEffect(() => {
     (async () => {
       const res = await fetch(PROXY + "/shoes");
       const data: Shoes[] = await res.json();
-
+      
       if (data !== null) {
         if (productContext !== undefined) {
+          console.log(data);
           setProductContext((prevProductContext) => [...prevProductContext, ...data]);
         } else {
+          console.log(data);
           setProductContext(data);
         }
       }
@@ -103,7 +105,7 @@ const App: React.FC = () => {
           />
           <ProductCartContext.Provider value={productsCartMemo}>
             <Route exact path={ROUTES.HOME} component={Home} />
-            {pageNumbers.length &&
+            {!!pageNumbers.length &&
               pageNumbers.map((number, index) => (
                 <Route key={index} exact path={`/page-${number}`} component={PageProducts} />
               ))}

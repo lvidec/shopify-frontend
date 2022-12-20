@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
+import { PROXY } from "../App";
+import { ProductCartContext, ProductContextTypes } from "../context/ProductCartContext";
 import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
-import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
 import Product from "./Product";
-import { PROXY } from "../App";
 
 const Products = ({ search }: { search: string }) => {
   type Clothing = Models["Clothing"];
@@ -12,6 +12,9 @@ const Products = ({ search }: { search: string }) => {
   const { productContext, setProductContext } =
     useContext<ProductContextTypes>(ProductCartContext);
 
+  // const correctType = (product: Clothing | Shoes, type: PRODUCT_TYPE): boolean => {
+  //   return type in product;
+  // };
     
   const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
 
@@ -25,14 +28,14 @@ const Products = ({ search }: { search: string }) => {
         method: "DELETE",
       });
     }
-
+    
     if (res.ok) {
       setProductContext(
         productContext
           // .filter((product) => correctType(product, type))
           .filter((product) => product.id !== id)
       );
-    } else alert("Error deleting clothes!");
+    } else alert("Error deleting product!");
 
   };
 

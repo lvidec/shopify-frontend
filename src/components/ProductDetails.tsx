@@ -17,13 +17,6 @@ const ProductDetailsCategory = ({ match }: any) => {
     (product) => product.brandName === match.params.id
   );
 
-  const correctType = (
-    product: Clothing | Shoes,
-    type: PRODUCT_TYPE
-  ): boolean => {
-    return type in product;
-  };
-
   const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
     let res;
     if (type === PRODUCT_TYPE.CLOTHING) {
@@ -37,30 +30,24 @@ const ProductDetailsCategory = ({ match }: any) => {
     }
 
     if (res.ok) {
-      setProductContext(
-        productContext
-          .filter((product) => correctType(product, type))
-          .filter((product) => product.id !== id)
-      );
-      alert(
-        "Deletion of clothes will be completed after refresh...done without Rxjs, try deleting shoes for full responsiveness with Rxjs"
-      );
-    } else alert("Error deleting clothes!");
-
+      setProductContext(productContext.filter((product) => product.id !== id));
+    } else {
+      alert("Error deleting product!");
+    }
   };
 
   if (productContext.length < 1) return <Redirect to={"/"} />;
   else
     return (
       <div className="products margin-top-center">
-          {filteredProducts.map((product: Clothing | Shoes) => (
-            <Product
-              key={product.id}
-              product={product}
-              hasAddToCart={true}
-              onDelete={deleteProductByIdAndType}
-              />
-          ))}
+        {filteredProducts.map((product: Clothing | Shoes) => (
+          <Product
+            key={product.id}
+            product={product}
+            hasAddToCart={true}
+            onDelete={deleteProductByIdAndType}
+          />
+        ))}
       </div>
     );
 };

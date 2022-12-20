@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
 import { isAdmin, isAuthenticated } from "../service/AuthService";
@@ -43,23 +43,19 @@ const Product = ({ product, onDelete, hasAddToCart }: ProductProps) => {
       <h6>${product.price}</h6>
       <p>{product.details}</p>
       <br />
-      <br />
       {hasAddToCart && (
         <a className="button" href="/#" onClick={() => addToCart(product.id)}>
           <i className="fa fa-shopping-cart"></i> &nbsp; Add to Cart
         </a>
       )}
       {isAdmin() && (
-        <>
-          <br />
-          <a
-            className="button"
-            href="/#"
-            onClick={() => onDelete && onDelete(product.id, getType(product))}
-          >
-            <i className="fa fa-trash-o"></i> &nbsp; Delete
-          </a>
-        </>
+        <Link
+          className="button"
+          to="/"
+          onClick={() => onDelete && onDelete(product.id, getType(product))}
+        >
+          <i className="fa fa-trash-o"></i> &nbsp; Delete
+        </Link>
       )}
     </div>
   );

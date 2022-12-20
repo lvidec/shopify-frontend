@@ -60,7 +60,7 @@ const AddProduct = () => {
     } catch (e) {
       console.log(e);
     }
-    return;
+    window.location.reload();
   };
 
   const onSubmit = (e: any) => {
@@ -153,7 +153,7 @@ const AddProduct = () => {
           <input
             type="text"
             placeholder="Name"
-            value={productToAdd.name}
+            value={productToAdd.name || ''}
             onChange={(e) => handleOnChange(e)}
             name="name"
           />
@@ -165,7 +165,7 @@ const AddProduct = () => {
           <input
             type="text"
             placeholder="Details"
-            value={productToAdd.details}
+            value={productToAdd.details || ''}
             onChange={(e) => handleOnChange(e)}
             name="details"
           />
@@ -177,7 +177,7 @@ const AddProduct = () => {
           <input
             type="number"
             placeholder="Price"
-            value={productToAdd.price}
+            value={productToAdd.price || ''}
             onChange={(e) => handleOnChange(e)}
             name="price"
           />
@@ -189,7 +189,7 @@ const AddProduct = () => {
           <input
             type="text"
             placeholder="Image url"
-            value={productToAdd.img}
+            value={productToAdd.img || ''}
             onChange={(e) => handleOnChange(e)}
             name="img"
           />
@@ -201,7 +201,7 @@ const AddProduct = () => {
           <input
             type="text"
             placeholder="Brand name"
-            value={productToAdd.brandName}
+            value={productToAdd.brandName || ''}
             onChange={(e) => handleOnChange(e)}
             name="brandName"
           />

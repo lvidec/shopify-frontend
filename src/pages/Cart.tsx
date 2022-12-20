@@ -27,14 +27,14 @@ const Cart = ({ products }: CartProps) => {
   let filteredClothing: Clothing[] | undefined;
   if (getLocalClothing().length) {
     filteredClothing = products.filter(isClothing);
-    filteredClothing = filteredClothing?.filter((clothes) =>
-      getLocalClothing().includes(clothes.id)
-    );
+    filteredClothing = filteredClothing?.filter((clothes) => getLocalClothing().includes(clothes.id));
   }
 
   let filteredShoes: Shoes[] | undefined;
-  if (getLocalShoes().length) filteredShoes = products.filter(isShoes);
-  filteredShoes = filteredShoes?.filter((shoe) => getLocalShoes().includes(shoe.id));
+  if (getLocalShoes().length) {
+    filteredShoes = products.filter(isShoes);
+    filteredShoes = filteredShoes?.filter((shoe) => getLocalShoes().includes(shoe.id));
+  }
 
   let totalPriceClothing: number | undefined = filteredClothing?.reduce(
     (a, { price }) => a + price,
@@ -62,7 +62,7 @@ const Cart = ({ products }: CartProps) => {
   if (products.length < 1) {
     return <Redirect to="/" />;
   } else if (!filteredClothing && !filteredShoes) {
-    return <h2>Empty Cart</h2>;
+    return <h2 className="empty-cart">Empty Cart</h2>;
   } else
     return (
       <div className="margin-top-center">

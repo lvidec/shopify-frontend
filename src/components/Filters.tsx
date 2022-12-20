@@ -1,11 +1,20 @@
-import { useCallback, useContext, useRef, useState } from "react";
-import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { ProductCartContext, ProductContextTypes } from "../context/ProductCartContext";
 import Category from "./Category";
 
 const Filters = () => {
   const { productContext } = useContext<ProductContextTypes>(ProductCartContext);
   const categoryRef = useRef<HTMLDivElement | null>(null);
-  const [dropDownIcon, setDropDownIcon] = useState(false);
+  const [dropDownIcon, setDropDownIcon] = useState(true);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 1200);
+
+useEffect(() => {
+    window.addEventListener("resize", () => {
+        let isMobileOnResize = window.innerWidth < 1200;
+        if (isMobile !== isMobileOnResize)
+          setIsMobile(isMobileOnResize);
+    }, false);
+}, [isMobile]);
 
   const distinctBrands = useCallback((): string[] => {
     let brandNames: string[] = [];
@@ -37,8 +46,8 @@ const Filters = () => {
         </a>
       </div>
       <hr />
-      <div ref={categoryRef} className="hide-dropdown">
-        {distinctBrands().length &&
+      <div ref={categoryRef} className={isMobile ? "hide-dropdown" : "show-dropdown"}>
+        {!!distinctBrands().length &&
           distinctBrands().map((brandName: string, index: number) => (
             <Category key={index} brandName={brandName} />
           ))}

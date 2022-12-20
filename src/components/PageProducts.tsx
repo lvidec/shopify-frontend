@@ -29,10 +29,6 @@ const PageProducts = ({ match }: any) => {
     );
   }
 
-  const correctType = (product: Clothing | Shoes, type: PRODUCT_TYPE): boolean => {
-    return type in product;
-  };
-
   const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
     let res;
     if (type === PRODUCT_TYPE.CLOTHING) {
@@ -48,13 +44,9 @@ const PageProducts = ({ match }: any) => {
     if (res.ok) {
       setProductContext(
         productContext
-          .filter((product) => correctType(product, type))
           .filter((product) => product.id !== id)
       );
-      alert(
-        "Deletion of product will be completed after refresh...done without Rxjs, try deleting shoes for full responsiveness with Rxjs"
-      );
-    } else alert("Error deleting clothes!");
+    } else alert("Error deleting product!");
   };
 
   if (productContext.length < 1) return <Redirect to={"/"} />;

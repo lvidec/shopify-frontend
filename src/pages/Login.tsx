@@ -2,22 +2,27 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { PROXY } from "../App";
 import Models from "../helpers/Models";
 import { fetchAllUsers } from "../redux/ActionCreatorsUser";
 import { getToken, setTokenLocal, setUserLocal } from "../service/StorageService";
+import { isAdmin } from "../service/AuthService";
 
 type UserAuthentication = Models["UserAuthentication"];
+
+interface LocationState {
+  siteToRedirectTo: string;
+}
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   // const authenticate = useSelector((state: any) => state.authenticate);
-  const dispatch = useDispatch();
-
+  const location = useLocation<LocationState>();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   let userAuthentication: UserAuthentication;
   const errorMessage = useRef<HTMLDivElement | null>(null);
@@ -28,34 +33,53 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    
     try {
       const resToken = await axios.post(PROXY + "/api/authenticate", {
         username,
         password,
       });
-
+      
       userAuthentication = resToken.data;
-
+      
       const userito = jwtDecode(userAuthentication.jwtToken.token);
-
+      
       console.log(userito);
-
+      
       setTokenLocal(userAuthentication.jwtToken.token);
       setUserLocal(userito);
-
-      history.push("/user-dashboard");
-
+      
+      
       // fetchAuthenticate(username, password);
       // dispatch(fetchAuthenticate(username, password));
-      // if(authenticate.user && authenticate.user.sub === username){
-      //   history.push("/user-dashboard");
-      // }
+      // if (authenticate.user && authenticate.user.sub === username){
+        //   history.push("/user-dashboard");
+        // }
     } catch (err) {
       if (errorMessage.current) {
         errorMessage.current.style.display = "inline";
+        return;
       }
     }
+
+    if (location.state && "siteToRedirectTo" in location.state) {
+      let siteToRedirectTo = location.state.siteToRedirectTo;
+      if (!siteToRedirectTo) {
+        history.push("/");
+      }
+      else if (isAdmin()) {
+        history.push(siteToRedirectTo);
+      }
+      else if (isAdmin() === undefined || !isAdmin()) {
+        alert("Cannot go to Admin only routes as a User");
+        history.push("/");
+      }
+    }
+    else {
+      history.push("/")
+    }
+
+    window.location.reload();
   };
 
   return (
@@ -64,7 +88,7 @@ const Login = () => {
         <img
           src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-login-form/img1.jpg"
           alt="login form"
-        />
+          />
         <div className="login-info-container">
           <div className="login-info">
             <div className="title">
@@ -81,9 +105,8 @@ const Login = () => {
                   onChange={(e) => setUsername(e.target.value)}
                 />
                 <br />
-                <label>Username</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <span>Edi (User)</span>
-                <span> &nbsp;&nbsp; Lima (Admin)</span> <br />
+                <label>Username</label>
+                <p>Edi (User) &nbsp;&nbsp; Lima (Admin)</p>
               </div>
 
               <div className="search-bar">
@@ -93,9 +116,8 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <br />
-                <label>Password&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <span>Edi</span>
-                <span> &nbsp;&nbsp; Lima </span> <br />{" "}
+                <label>Password</label>
+                <p>Edi &nbsp;&nbsp; Lima</p>
               </div>
 
               <div ref={errorMessage} className="error-message">
@@ -112,6 +134,7 @@ const Login = () => {
             <Link className="back-button" to="/">
               Go Back
             </Link>
+            <br />
           </div>
         </div>
       </div>

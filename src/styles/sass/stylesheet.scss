@@ -8,6 +8,7 @@ $nav-color: rgb(51, 51, 59);
 
 $grey-color: rgb(200, 200, 200);
 $blue-color: rgb(41, 41, 127);
+$red-color: rgb(208, 14, 14);
 
 $transparent-red-color: rgba(208, 14, 14, 0.7);
 $transparent-green-color: rgba(20, 190, 57, 0.7);
@@ -58,6 +59,30 @@ li {
 
   .nav-right {
     margin-right: 1rem;
+
+    .admin-lock, .admin-unlock {
+      position: relative;
+      display: inline;
+      right: 1.25em;
+    }
+
+    .admin-lock::after, .admin-unlock::after {
+      font-family: FontAwesome;
+      position: absolute;
+      display: block;
+      width: 1em;
+      height: 1em;
+      top: -.25em;
+      right: -1.25em;
+    }
+
+    .admin-lock::after {
+      content: "\f023";
+    }
+
+    .admin-unlock::after {
+      content: "\f09c";
+    }
   }
 
   .link {
@@ -170,6 +195,8 @@ li {
     left: 50%;
     transform: translate(-50%, -50%);
     height: fit-content;
+    max-height: 75vh;
+    width: 75vw;
 
     img {
       border-radius: 2em 2em 0 0;
@@ -183,7 +210,6 @@ li {
     .login-info-container {
       background-color: rgba(237, 237, 237, 0.6);
       display: block;
-      height: 40vh;
       overflow: hidden;
       border-radius: 0 0 2em 2em;
 
@@ -194,6 +220,9 @@ li {
         input {
           border-radius: .35em;
           border-color: transparent;
+          min-height: 1.25vw;
+          min-width: 40%;
+          font-size: .75em;
         }
 
         .error-message {
@@ -251,9 +280,10 @@ li {
         .search-bar {
           margin-bottom: 1.5em;
 
-          span {
-            color: rgb(88, 84, 84);
+          p {
+            color: rgb(119, 112, 112);
             font-size: .75em;
+            margin: 0 auto;
           }
         }
       }
@@ -270,6 +300,7 @@ li {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: right;
   }
 
   .text-on-image {
@@ -356,8 +387,11 @@ li {
     border-radius: 2.5em 2.5em 0 0;
     margin: .5em .2em;
     padding: .25em 0;
-    line-height: .1;
     text-align: center;
+
+    p, h5, h6 {
+      margin: .5em;
+    }
 
     img {
       display: block;
@@ -395,6 +429,11 @@ li {
   }
 }
 
+.empty-cart {
+  margin: auto;
+  color: $transparent-red-color;
+}
+
 .pagination {
   margin: 1em 0;
   flex-basis: 100%;
@@ -429,19 +468,27 @@ footer {
   text-align: center;
 }
 
-
 // MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 
 @media only screen and (max-width: $x-small-size) {
 
   .nav-container {
-    font-size: .6em;
+    font-size: .55em;
 
     button {
-      font-size: .9em;
+      font-size: .8em;
     }
   }
+}
 
+@media only screen and (max-width: $small-size) {
+
+  .dashboard-container {
+  
+    img {
+      object-position: 70%;
+    }
+  }
 }
 
 @media only screen and (min-width: $small-size) {
@@ -476,9 +523,7 @@ footer {
   }
 }
 
-
 @media (min-width: $large-size) {
-
   
   .home-container {
     .products-container {
@@ -491,4 +536,11 @@ footer {
     }
   }
 
+  .login-container {
+    .card-container {
+      .login-info-container {
+        font-size: 2em;
+      }
+    }
+  }
 }

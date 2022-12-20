@@ -17,11 +17,10 @@ export default function Home() {
         onChange={(e) => setSearch(e.target.value.toLowerCase())}
         className="search-bar"
       />
-      {/* <Pagination /> */}
-          <Pagination />
+      <Pagination />
       <div className="products-container">
-          <Filters />
-          <Products search={search} />
+        <Filters />
+        <Products search={search} />
       </div>
     </div>
   );

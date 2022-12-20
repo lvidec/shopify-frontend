@@ -17,8 +17,14 @@ const UserDashboard = () => {
             &nbsp;dashboard!
           </p>
           <div className="links">
-            <Link onClick={() => logout()} to="/">
-              Logout{" "}
+            <Link
+              onClick={() => {
+                window.location.reload();
+                logout();
+              }}
+              to="/"
+            >
+              Logout
             </Link>
             <Link to="/">Go Home</Link>
           </div>
