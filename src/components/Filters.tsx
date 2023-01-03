@@ -1,20 +1,20 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { ProductCartContext, ProductContextTypes } from "../context/ProductCartContext";
+import { ProductContextDefault, ProductContextTypes } from "../context/ProductContext";
 import Category from "./Category";
 
 const Filters = () => {
-  const { productContext } = useContext<ProductContextTypes>(ProductCartContext);
+  const { productContext } = useContext<ProductContextTypes>(ProductContextDefault);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const [dropDownIcon, setDropDownIcon] = useState(true);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 1200);
 
-useEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", () => {
         let isMobileOnResize = window.innerWidth < 1200;
         if (isMobile !== isMobileOnResize)
           setIsMobile(isMobileOnResize);
     }, false);
-}, [isMobile]);
+  }, [isMobile]);
 
   const distinctBrands = useCallback((): string[] => {
     let brandNames: string[] = [];

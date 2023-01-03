@@ -1,55 +1,84 @@
-import { useContext } from "react";
-import { Redirect } from "react-router-dom";
-import { PROXY } from "../App";
-import { ProductCartContext, ProductContextTypes } from "../context/ProductCartContext";
+import { useContext, useEffect, useState } from "react";
+import { Link, RouteChildrenProps, useHistory } from "react-router-dom";
+import { PROXY, ROUTES } from "../App";
+import { ProductContextDefault, ProductContextTypes } from "../context/ProductContext";
 import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
-import Product from "./Product";
+import { isAdmin } from "../service/AuthService";
+import { addToCart, deleteProductByIdAndType } from "../service/ProductService";
+
+interface MatchParams {
+  type: string;
+  id: string;
+}
+
+interface MatchProps extends RouteChildrenProps<MatchParams> {}
 
 type Clothing = Models["Clothing"];
 type Shoes = Models["Shoes"];
 
-const ProductDetailsCategory = ({ match }: any) => {
+const ProductDetails = ({ match }: MatchProps) => {
+  const productId: string | undefined = match?.params.id;
+  const productType: string | undefined = match?.params.type;
 
-  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductCartContext);
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
+  const [product, setProduct] = useState<Clothing | Shoes>({} as Clothing | Shoes);
 
-  let filteredProducts: (Clothing | Shoes)[] = productContext.filter(
-    (product) => product.brandName === match.params.id
-  );
+  const history = useHistory();
 
-  const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
-    let res;
-    if (type === PRODUCT_TYPE.CLOTHING) {
-      res = await fetch(PROXY + `/clothing/${id}`, {
-        method: "DELETE",
-      });
-    } else {
-      res = await fetch(PROXY + `/shoes/${id}`, {
-        method: "DELETE",
-      });
-    }
+  useEffect(() => {
+    (async () => {
+      if (productType === PRODUCT_TYPE.CLOTHING) {
+        let res = await fetch(PROXY + "/clothing/" + productId);
+        let data: Clothing = await res.json();
 
-    if (res.ok) {
-      setProductContext(productContext.filter((product) => product.id !== id));
-    } else {
-      alert("Error deleting product!");
-    }
-  };
+        if (res.ok && data !== null && data !== undefined) {
+          setProduct(data);
+        }
+      } else if (productType === PRODUCT_TYPE.SHOES) {
+        let res = await fetch(PROXY + "/shoes/" + productId);
+        let data: Shoes = await res.json();
 
-  if (productContext.length < 1) return <Redirect to={"/"} />;
-  else
-    return (
-      <div className="products margin-top-center">
-        {filteredProducts.map((product: Clothing | Shoes) => (
-          <Product
-            key={product.id}
-            product={product}
-            hasAddToCart={true}
-            onDelete={deleteProductByIdAndType}
-          />
-        ))}
+        if (res.ok && data !== null && data !== undefined) {
+          setProduct(data);
+        }
+      }
+    })();
+  }, []);
+
+  const productExists = (): boolean => {
+    return productId !== undefined && productType !== undefined;
+  }
+
+  const getProductType = (productType: string | undefined): PRODUCT_TYPE => {
+    return productType === PRODUCT_TYPE.CLOTHING ? PRODUCT_TYPE.CLOTHING : PRODUCT_TYPE.SHOES;
+  }
+  
+  return (
+    <section className="product-details-container">
+      <div className="product-container">
+        <img src={product?.img} alt={product?.name} />
+        <div className="details-container">
+          <h2>{product?.brandName}</h2>
+          <h5>{product?.name}</h5>
+          <p>${product?.price}</p>
+          <a className="button" href="/#" onClick={() => addToCart(product, history)}>
+            <i className="fa fa-shopping-cart"></i> &nbsp; Add to Cart
+          </a>
+          {isAdmin() && productExists() && (
+            <Link
+            className="button"
+            to={ROUTES.HOME}
+              onClick={() => deleteProductByIdAndType(product.id, getProductType(productType), productContext, setProductContext)}
+            >
+              <i className="fa fa-trash-o"></i> &nbsp; Delete
+            </Link>
+          )}
+        </div>
       </div>
-    );
+      <p>{product.details}</p>
+    </section>
+  );
 };
 
-export default ProductDetailsCategory;
+export default ProductDetails;

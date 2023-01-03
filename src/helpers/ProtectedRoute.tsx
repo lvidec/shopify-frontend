@@ -1,6 +1,7 @@
 import { Redirect, Route, RouteProps } from "react-router";
 import { isAuthenticated } from "../service/AuthService";
 import { getUser } from "../service/StorageService";
+import { ROUTES } from "../App";
 
 export type ProtectedRouteProps = {
   shouldBeAdmin: boolean;
@@ -13,7 +14,7 @@ const ProtectedRoute = ({ shouldBeAdmin, ...routeProps }: ProtectedRouteProps) =
     return <Route {...routeProps} />;
   }
   else {
-    return <Redirect to={{ pathname: "/login", state: { siteToRedirectTo: routeProps.location?.pathname } }} />;
+    return <Redirect to={{ pathname: ROUTES.LOGIN, state: { siteToRedirectTo: routeProps.location?.pathname } }} />;
   }
 };
 

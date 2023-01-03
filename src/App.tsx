@@ -3,8 +3,8 @@ import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import NotFound from "./components/NotFound";
 import PageProducts from "./components/PageProducts";
-import ProductDetailsCategory from "./components/ProductDetails";
-import { ProductCartContext } from "./context/ProductCartContext";
+import CategoryProducts from "./components/CategoryProducts";
+import { ProductContextDefault } from "./context/ProductContext";
 import Models from "./helpers/Models";
 import ProtectedRoute from "./helpers/ProtectedRoute";
 import AddProduct from "./pages/AddProduct";
@@ -12,18 +12,18 @@ import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import UserDashboard from "./pages/UserDashboard";
+import ProductDetails from "./components/ProductDetails";
 
 export const POSTS_PER_PAGE = 9;
 
 export const ROUTES = {
   HOME: "/",
-  PRODUCT_DETAILS: "/category/:id",
   LOGIN: "/login",
   USER_DASHBOARD: "/user-dashboard",
-  ADD_CLOTHING: "/add-clothing",
-  ADD_SHOES: "/add-shoes",
   CART: "/cart",
   ADD_PRODUCT: "/add-product",
+  PRODUCT_DETAILS: "/product/:type/:id",
+  CATEGORY_PRODUCTS: "/category/:id",
 };
 
 export const PROXY = process.env.REACT_APP_PROXY_HOST;
@@ -103,14 +103,15 @@ const App: React.FC = () => {
             shouldBeAdmin={false}
             render={() => <Cart products={productContext} />}
           />
-          <ProductCartContext.Provider value={productsCartMemo}>
+          <ProductContextDefault.Provider value={productsCartMemo}>
             <Route exact path={ROUTES.HOME} component={Home} />
             {!!pageNumbers.length &&
               pageNumbers.map((number, index) => (
                 <Route key={index} exact path={`/page-${number}`} component={PageProducts} />
               ))}
-            <Route exact path={ROUTES.PRODUCT_DETAILS} component={ProductDetailsCategory} />
-          </ProductCartContext.Provider>
+            <Route exact path={ROUTES.PRODUCT_DETAILS} component={ProductDetails} />
+            <Route exact path={ROUTES.CATEGORY_PRODUCTS} component={CategoryProducts} />
+          </ProductContextDefault.Provider>
           <Route component={NotFound} />
         </Switch>
         <footer>Shopify</footer>

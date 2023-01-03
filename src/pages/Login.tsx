@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { PROXY } from "../App";
+import { PROXY, ROUTES } from "../App";
 import Models from "../helpers/Models";
 import { fetchAllUsers } from "../redux/ActionCreatorsUser";
 import { getToken, setTokenLocal, setUserLocal } from "../service/StorageService";
@@ -131,7 +131,7 @@ const Login = () => {
               </a>
             </form>
 
-            <Link className="back-button" to="/">
+            <Link className="back-button" to={ROUTES.HOME}>
               Go Back
             </Link>
             <br />

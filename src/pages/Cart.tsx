@@ -7,6 +7,8 @@ import {
   getLocalClothing,
   getLocalShoes,
 } from "../service/StorageService";
+import { ROUTES } from "../App";
+import { PRODUCT_TYPE } from "../helpers/Enums";
 
 type Clothing = Models["Clothing"];
 type Shoes = Models["Shoes"];
@@ -17,11 +19,11 @@ interface CartProps {
 
 const Cart = ({ products }: CartProps) => {
   function isClothing(product: Clothing | Shoes): product is Clothing {
-    return "clothingType" in product;
+    return PRODUCT_TYPE.CLOTHING in product;
   }
 
   function isShoes(product: Clothing | Shoes): product is Shoes {
-    return "shoesType" in product;
+    return PRODUCT_TYPE.SHOES in product;
   }
 
   let filteredClothing: Clothing[] | undefined;
@@ -60,7 +62,7 @@ const Cart = ({ products }: CartProps) => {
   };
 
   if (products.length < 1) {
-    return <Redirect to="/" />;
+    return <Redirect to={ROUTES.HOME} />;
   } else if (!filteredClothing && !filteredShoes) {
     return <h2 className="empty-cart">Empty Cart</h2>;
   } else

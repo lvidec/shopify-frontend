@@ -2,6 +2,7 @@ import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { logout } from "../service/AuthService";
 import { getUser } from "../service/StorageService";
+import { ROUTES } from "../App";
 
 const UserDashboard = () => {
   if (JSON.parse(getUser()).sub)
@@ -18,20 +19,20 @@ const UserDashboard = () => {
           </p>
           <div className="links">
             <Link
+              to={ROUTES.HOME}
               onClick={() => {
                 window.location.reload();
                 logout();
               }}
-              to="/"
             >
               Logout
             </Link>
-            <Link to="/">Go Home</Link>
+            <Link to={ROUTES.HOME}>Go Home</Link>
           </div>
         </div>
       </div>
     );
-  else return <Redirect to="/" />;
+  else return <Redirect to={ROUTES.HOME} />;
 };
 
 export default UserDashboard;

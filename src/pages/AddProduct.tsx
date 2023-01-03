@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { PRODUCT_TYPE, Sex } from "../helpers/Enums";
 import Models from "../helpers/Models";
-import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import { ProductContextTypes, ProductContextDefault } from "../context/ProductContext";
 import { PROXY } from "../App";
 
 type Clothing = Models["Clothing"];
@@ -24,10 +24,10 @@ const AddProduct = () => {
 
   const [productToAdd, setProductToAdd] = useState<Partial<ProductToAdd>>({});
   const [productType, setProductType] = useState<PRODUCT_TYPE>(PRODUCT_TYPE.CLOTHING);
-  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductCartContext);
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
 
   function isClothing(product: Clothing | Shoes): product is Clothing {
-    return "clothingType" in product;
+    return PRODUCT_TYPE.CLOTHING in product;
   }
 
   const addProduct = async (product: Clothing | Shoes) => {

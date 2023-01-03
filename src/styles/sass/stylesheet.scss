@@ -379,16 +379,28 @@ li {
   justify-content: center;
   flex-wrap: wrap;
   padding-bottom: 4em;
+  gap: 1em;
 
   .product-card {
     flex-basis: 48%;
     font-size: 1em;
     border: 1px solid $button-color;
     border-radius: 2.5em 2.5em 0 0;
-    margin: .5em .2em;
-    padding: .25em 0;
     text-align: center;
+    overflow: hidden;
 
+    .product-info {
+      cursor: pointer;
+      margin-bottom: .75em;
+      padding: 1em 0;
+      
+      &:hover { 
+        transition: transform 250ms ease-in-out;
+        transform: scale(1.08);
+        background-color: rgb(245, 245, 245);
+      }
+    }
+    
     p, h5, h6 {
       margin: .5em;
     }
@@ -398,6 +410,7 @@ li {
       margin: auto;
       height: 200px;
       width: 150px;
+      mix-blend-mode: darken;
     }
 
     p {
@@ -413,20 +426,80 @@ li {
       border-color: transparent;
       font-size: .75em;
 
-      &:nth-of-type(1) {
+      &:nth-of-type(2) {
         background-color: $transparent-black-color;
         color: white;
       }
-
-      &:nth-of-type(2) {
+      
+      &:nth-of-type(3) {
         background-color: $transparent-red-color;
       }
-
+      
       &:hover {
         box-shadow: 2px 2px 2px $transparent-black-color;
       }
     }
   }
+}
+
+.product-details-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(222, 184, 135, 0.25);
+  padding-top: 2.5vh;
+  font-size: 1.5em;
+  
+  > p {
+    width: 90%;
+    margin: 1em auto;
+  }
+  
+  .product-container {
+    display: flex;
+    margin: 0 auto;
+    width: 90vw;
+
+    img {
+      mix-blend-mode: darken;
+      width: 75%;
+    }
+
+    div, img {
+      text-align: center;
+      margin-top: 10vh;
+    }
+
+    .details-container {
+      width: 100%;
+      text-align: center;
+
+      a {
+        width: 50%;
+        background-color: $transparent-black-color;
+        color: white;
+        display: block;
+        margin: .25em auto;
+        padding: .5em 0;
+        border-radius: .5em;
+        border-color: transparent;
+        font-size: .75em;
+
+        &:nth-of-type(1) {
+          background-color: $transparent-black-color;
+          color: white;
+        }
+  
+        &:nth-of-type(2) {
+          background-color: $transparent-red-color;
+        }
+
+        &:hover {
+          box-shadow: 2px 2px 2px $transparent-black-color;
+        }
+      }
+    }
+  }
+  
 }
 
 .empty-cart {
@@ -479,6 +552,24 @@ footer {
       font-size: .8em;
     }
   }
+
+  .product-details-container {
+    padding-top: 10vh;
+
+    .product-container {
+      flex-direction: column;
+
+      div, img {
+        text-align: center;
+        margin-top: 0;
+      }
+
+      img {
+        margin: 0 auto;
+      }
+    }
+  }
+
 }
 
 @media only screen and (max-width: $small-size) {

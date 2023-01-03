@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { POSTS_PER_PAGE } from "../App";
-import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import { ProductContextTypes, ProductContextDefault } from "../context/ProductContext";
 
 const Pagination = () => {
-  const { productContext } = useContext<ProductContextTypes>(ProductCartContext);
+  const { productContext } = useContext<ProductContextTypes>(ProductContextDefault);
 
   const pageNumbers = [];
   const totalPosts = productContext.length;

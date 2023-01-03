@@ -1,58 +1,52 @@
+import { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { ROUTES } from "../App";
+import { ProductContextDefault, ProductContextTypes } from "../context/ProductContext";
 import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
-import { isAdmin, isAuthenticated } from "../service/AuthService";
-import {
-  getLocalClothing,
-  setLocalClothing,
-  getLocalShoes,
-  setLocalShoes,
-} from "../service/StorageService";
+import { isAdmin } from "../service/AuthService";
+import { addToCart, getTypeFromProduct } from "../service/ProductService";
 
 type Clothing = Models["Clothing"];
 type Shoes = Models["Shoes"];
 
 interface ProductProps {
   product: Clothing | Shoes;
-  onDelete?: (id: number, type: PRODUCT_TYPE) => void;
+  onDelete?: (
+    id: number,
+    type: PRODUCT_TYPE,
+    productContext: (Clothing | Shoes)[],
+    setProductContext: React.Dispatch<React.SetStateAction<(Clothing | Shoes)[]>>
+  ) => void;
   hasAddToCart: boolean;
 }
 
 const Product = ({ product, onDelete, hasAddToCart }: ProductProps) => {
   const history = useHistory();
-
-  const addToCart = (id: number) => {
-    if (!isAuthenticated()) history.push("/login");
-    else if ("clothingType" in product) {
-      let array = getLocalClothing();
-      getLocalClothing().length ? setLocalClothing(array.concat(id)) : setLocalClothing([id]);
-    } else {
-      let array = getLocalShoes();
-      getLocalShoes().length ? setLocalShoes(array.concat(id)) : setLocalShoes([id]);
-    }
-  };
-
-  const getType = (product: Clothing | Shoes): PRODUCT_TYPE => {
-    return "clothingType" in product ? PRODUCT_TYPE.CLOTHING : PRODUCT_TYPE.SHOES;
-  };
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
 
   return (
     <div className="product-card">
-      <img src={product.img} alt="Denim Jeans" />
-      <h5>{product.name}</h5>
-      <h6>${product.price}</h6>
-      <p>{product.details}</p>
-      <br />
+      <Link to={`/product/${getTypeFromProduct(product)}/${product.id}`}>
+        <div className="product-info">
+          <img src={product.img} alt="Denim Jeans" />
+          <h5>{product.name}</h5>
+          <h6>${product.price}</h6>
+          <p>{product.details}</p>
+        </div>
+      </Link>
       {hasAddToCart && (
-        <a className="button" href="/#" onClick={() => addToCart(product.id)}>
+        <a className="button" href="/#" onClick={() => addToCart(product, history)}>
           <i className="fa fa-shopping-cart"></i> &nbsp; Add to Cart
         </a>
       )}
       {isAdmin() && (
         <Link
           className="button"
-          to="/"
-          onClick={() => onDelete && onDelete(product.id, getType(product))}
+          to={ROUTES.HOME}
+          onClick={() =>
+            onDelete && onDelete(product.id, getTypeFromProduct(product), productContext, setProductContext)
+          }
         >
           <i className="fa fa-trash-o"></i> &nbsp; Delete
         </Link>

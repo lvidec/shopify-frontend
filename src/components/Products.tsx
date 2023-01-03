@@ -1,44 +1,15 @@
 import { useContext } from "react";
-import { PROXY } from "../App";
-import { ProductCartContext, ProductContextTypes } from "../context/ProductCartContext";
-import { PRODUCT_TYPE } from "../helpers/Enums";
+import { ProductContextDefault, ProductContextTypes } from "../context/ProductContext";
 import Models from "../helpers/Models";
+import { deleteProductByIdAndType } from "../service/ProductService";
 import Product from "./Product";
 
 const Products = ({ search }: { search: string }) => {
   type Clothing = Models["Clothing"];
   type Shoes = Models["Shoes"];
 
-  const { productContext, setProductContext } =
-    useContext<ProductContextTypes>(ProductCartContext);
-
-  // const correctType = (product: Clothing | Shoes, type: PRODUCT_TYPE): boolean => {
-  //   return type in product;
-  // };
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
     
-  const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
-
-    let res;
-    if (type === PRODUCT_TYPE.CLOTHING) {
-      res = await fetch(PROXY + `/clothing/${id}`, {
-        method: "DELETE",
-      });
-    } else {
-      res = await fetch(PROXY + `/shoes/${id}`, {
-        method: "DELETE",
-      });
-    }
-    
-    if (res.ok) {
-      setProductContext(
-        productContext
-          // .filter((product) => correctType(product, type))
-          .filter((product) => product.id !== id)
-      );
-    } else alert("Error deleting product!");
-
-  };
-
   return (
     <div className="products" >
       {search

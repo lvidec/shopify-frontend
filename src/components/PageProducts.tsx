@@ -1,17 +1,18 @@
 import { useContext } from "react";
 import { Redirect } from "react-router-dom";
-import { POSTS_PER_PAGE, PROXY } from "../App";
+import { POSTS_PER_PAGE, PROXY, ROUTES } from "../App";
 import { PRODUCT_TYPE } from "../helpers/Enums";
 import Models from "../helpers/Models";
-import { ProductContextTypes, ProductCartContext } from "../context/ProductCartContext";
+import { ProductContextTypes, ProductContextDefault } from "../context/ProductContext";
 import Pagination from "./Pagination";
 import Product from "./Product";
+import { deleteProductByIdAndType } from "../service/ProductService";
 
 type Clothing = Models["Clothing"];
 type Shoes = Models["Shoes"];
 
 const PageProducts = ({ match }: any) => {
-  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductCartContext);
+  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
 
   const getNumberRegexp = /(?!x)[0-9]+/;
   const numberArray = getNumberRegexp.exec(match.path);
@@ -29,27 +30,7 @@ const PageProducts = ({ match }: any) => {
     );
   }
 
-  const deleteProductByIdAndType = async (id: number, type: PRODUCT_TYPE) => {
-    let res;
-    if (type === PRODUCT_TYPE.CLOTHING) {
-      res = await fetch(PROXY + `/clothing/${id}`, {
-        method: "DELETE",
-      });
-    } else {
-      res = await fetch(PROXY + `/shoes/${id}`, {
-        method: "DELETE",
-      });
-    }
-
-    if (res.ok) {
-      setProductContext(
-        productContext
-          .filter((product) => product.id !== id)
-      );
-    } else alert("Error deleting product!");
-  };
-
-  if (productContext.length < 1) return <Redirect to={"/"} />;
+  if (productContext.length < 1) return <Redirect to={ROUTES.HOME} />;
   else
     return (
       <>

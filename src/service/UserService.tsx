@@ -39,17 +39,6 @@ const UserService = () => {
         })
     }
 
-
-    return(
-        <>
-        {/* <button onClick={() => getUsers()}>
-            Clickni me mangupe
-        </button> */}
-            
-        </>
-    )
-
-
 }
 
 export default UserService;

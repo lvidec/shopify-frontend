@@ -10,4 +10,4 @@ export interface ProductContextTypes {
     setProductContext: React.Dispatch<React.SetStateAction<(Clothing | Shoes)[]>>
 }
 
-export const ProductCartContext = createContext<ProductContextTypes>({} as ProductContextTypes);
+export const ProductContextDefault = createContext<ProductContextTypes>({} as ProductContextTypes);
