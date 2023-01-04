@@ -17,7 +17,7 @@ type Shoes = Models["Shoes"];
 
 const CategoryProducts = ({ match }: MatchProps) => {
 
-  const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
+  const { productContext } = useContext<ProductContextTypes>(ProductContextDefault);
 
   let filteredProducts: (Clothing | Shoes)[] = productContext.filter(
     (product) => product.brandName === match?.params.id

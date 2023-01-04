@@ -1,7 +1,6 @@
 import { Redirect, Route, RouteProps } from "react-router";
-import { isAdmin, isAuthenticated } from "../service/AuthService";
-import { getUser } from "../service/StorageService";
 import { ROUTES } from "../App";
+import { isAdmin, isAuthenticated } from "../service/AuthService";
 
 export type ProtectedRouteProps = {
   shouldBeAdmin: boolean;

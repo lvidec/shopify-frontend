@@ -44,7 +44,7 @@ const ProductDetails = ({ match }: MatchProps) => {
         }
       }
     })();
-  }, []);
+  }, [productId, productType]);
 
   const productExists = (): boolean => {
     return productId !== undefined && productType !== undefined;
