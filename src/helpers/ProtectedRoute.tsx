@@ -8,7 +8,6 @@ export type ProtectedRouteProps = {
 } & RouteProps;
 
 const ProtectedRoute = ({ shouldBeAdmin, ...routeProps }: ProtectedRouteProps) => {
-  // if (JSON.parse(getUser()).auth === "ADMIN") {
   if (isAdmin()) {
     return <Route {...routeProps} />;
   } else if (isAuthenticated() && shouldBeAdmin === false) {

@@ -13,8 +13,7 @@ const isAuthenticated = (): boolean =>{
 }
 
 const isAdmin = (): boolean =>{
-    // return JSON.parse(getUser()).auth === 'ADMIN' ? true : false;
-    return true;
+    return JSON.parse(getUser()).auth === 'ADMIN' ? true : false;
 }
 
 
