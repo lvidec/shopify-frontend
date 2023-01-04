@@ -74,23 +74,23 @@ const destroyLocalShoes = () => {
 };
 
 const destroyLocalShoeWithId = (id: number) => {
-  const shoesFromStorage = localStorage.getItem("shoes")
+  const shoesFromStorage = localStorage.getItem("shoes");
   if (shoesFromStorage !== null) {
     const index = shoesFromStorage.indexOf(id.toString());
     shoesFromStorage.slice(index, 1);
     let array: number[] = JSON.parse(shoesFromStorage);
-    let filteredArray = array.filter(shoeId => shoeId !== id);
+    let filteredArray = array.filter((shoeId) => shoeId !== id);
     setLocalShoes(filteredArray);
   }
 };
 
 const destroyLocalClothesWithId = (id: number) => {
-  const clothesFromStorage = localStorage.getItem("clothing")
+  const clothesFromStorage = localStorage.getItem("clothing");
   if (clothesFromStorage !== null) {
     const index = clothesFromStorage.indexOf(id.toString());
     clothesFromStorage.slice(index, 1);
     let array: number[] = JSON.parse(clothesFromStorage);
-    let filteredArray = array.filter(clothesId => clothesId !== id);
+    let filteredArray = array.filter((clothesId) => clothesId !== id);
     setLocalClothing(filteredArray);
   }
 };
@@ -112,5 +112,5 @@ export {
   getLocalShoes,
   destroyLocalShoes,
   destroyLocalShoeWithId,
-  destroyLocalClothesWithId
+  destroyLocalClothesWithId,
 };

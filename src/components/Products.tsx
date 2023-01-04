@@ -9,9 +9,9 @@ const Products = ({ search }: { search: string }) => {
   type Shoes = Models["Shoes"];
 
   const { productContext, setProductContext } = useContext<ProductContextTypes>(ProductContextDefault);
-    
+
   return (
-    <div className="products" >
+    <div className="products">
       {search
         ? productContext &&
           productContext

@@ -12,9 +12,13 @@ const ProtectedRoute = ({ shouldBeAdmin, ...routeProps }: ProtectedRouteProps) =
     return <Route {...routeProps} />;
   } else if (isAuthenticated() && shouldBeAdmin === false) {
     return <Route {...routeProps} />;
-  }
+  } 
   else {
-    return <Redirect to={{ pathname: ROUTES.LOGIN, state: { siteToRedirectTo: routeProps.location?.pathname } }} />;
+    return (
+      <Redirect
+        to={{ pathname: ROUTES.LOGIN, state: { siteToRedirectTo: routeProps.location?.pathname } }}
+      />
+    );
   }
 };
 

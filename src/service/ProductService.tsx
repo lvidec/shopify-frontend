@@ -33,7 +33,9 @@ const addToCart = (product: Clothing | Shoes, history: any) => {
   if (!isAuthenticated()) history.push("/login");
   else if (PRODUCT_TYPE.CLOTHING in product) {
     let array = getLocalClothing();
-    getLocalClothing().length ? setLocalClothing(array.concat(product.id)) : setLocalClothing([product.id]);
+    getLocalClothing().length
+      ? setLocalClothing(array.concat(product.id))
+      : setLocalClothing([product.id]);
   } else {
     let array = getLocalShoes();
     getLocalShoes().length ? setLocalShoes(array.concat(product.id)) : setLocalShoes([product.id]);

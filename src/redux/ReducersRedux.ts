@@ -3,10 +3,10 @@ import { reducerFetchusers } from "./UserReducer";
 import { reducerAuthenticate } from "./UserReducer";
 
 const reducers = combineReducers({
-    user: reducerFetchusers,
-    authenticate: reducerAuthenticate
-})
+  user: reducerFetchusers,
+  authenticate: reducerAuthenticate,
+});
 
-export default reducers
+export default reducers;
 
-export type RootState = ReturnType<typeof reducers>
+export type RootState = ReturnType<typeof reducers>;

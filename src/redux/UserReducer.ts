@@ -1,11 +1,11 @@
-import Models from '../helpers/Models';
+import Models from "../helpers/Models";
 import { ActionAuthenticateUser, ActionFetchUsers } from "./ActionsUser";
 import { ActionType } from "./ActionTypesUser";
 
 interface StateFetchUsers {
-  loading: boolean,
-  users: Models['User'][],
-  error: string
+  loading: boolean;
+  users: Models["User"][];
+  error: string;
 }
 
 const initialStateFetchUsers: StateFetchUsers = {
@@ -15,16 +15,19 @@ const initialStateFetchUsers: StateFetchUsers = {
 };
 
 interface StateAuthenticate {
-  user: any,
-  error: string
+  user: any;
+  error: string;
 }
 
 const initialStateAuthenticate: StateAuthenticate = {
   user: undefined,
-  error: '',
+  error: "",
 };
 
-const reducerFetchusers = (state: StateFetchUsers = initialStateFetchUsers, action: ActionFetchUsers) => {
+const reducerFetchusers = (
+  state: StateFetchUsers = initialStateFetchUsers,
+  action: ActionFetchUsers
+) => {
   switch (action.type) {
     case ActionType.FETCH_USERS_REQUEST:
       return {
@@ -48,17 +51,20 @@ const reducerFetchusers = (state: StateFetchUsers = initialStateFetchUsers, acti
   }
 };
 
-const reducerAuthenticate = (state: StateAuthenticate = initialStateAuthenticate, action: ActionAuthenticateUser) => {
+const reducerAuthenticate = (
+  state: StateAuthenticate = initialStateAuthenticate,
+  action: ActionAuthenticateUser
+) => {
   switch (action.type) {
     case ActionType.AUTHENTICATE_SUCCESS:
       return {
         user: action.payload,
-        error: ''
+        error: "",
       };
     case ActionType.AUTHENTICATE_FAILURE:
       return {
         user: undefined,
-        error: action.payload
+        error: action.payload,
       };
     default:
       return state;

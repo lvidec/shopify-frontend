@@ -48,12 +48,12 @@ const ProductDetails = ({ match }: MatchProps) => {
 
   const productExists = (): boolean => {
     return productId !== undefined && productType !== undefined;
-  }
+  };
 
   const getProductType = (productType: string | undefined): PRODUCT_TYPE => {
     return productType === PRODUCT_TYPE.CLOTHING ? PRODUCT_TYPE.CLOTHING : PRODUCT_TYPE.SHOES;
-  }
-  
+  };
+
   return (
     <section className="product-details-container">
       <div className="product-container">
@@ -67,9 +67,16 @@ const ProductDetails = ({ match }: MatchProps) => {
           </a>
           {isAdmin() && productExists() && (
             <Link
-            className="button"
-            to={ROUTES.HOME}
-              onClick={() => deleteProductByIdAndType(product.id, getProductType(productType), productContext, setProductContext)}
+              className="button"
+              to={ROUTES.HOME}
+              onClick={() =>
+                deleteProductByIdAndType(
+                  product.id,
+                  getProductType(productType),
+                  productContext,
+                  setProductContext
+                )
+              }
             >
               <i className="fa fa-trash-o"></i> &nbsp; Delete
             </Link>

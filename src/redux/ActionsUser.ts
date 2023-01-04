@@ -14,7 +14,6 @@ interface FetchUsersFailure {
   payload: any;
 }
 
-
 interface AuthenticateUserSuccess {
   type: ActionType.AUTHENTICATE_SUCCESS;
   payload: any;
@@ -24,8 +23,6 @@ interface AuthenticateUserFailure {
   type: ActionType.AUTHENTICATE_FAILURE;
   payload: any;
 }
-
-
 
 export type ActionAuthenticateUser = AuthenticateUserSuccess | AuthenticateUserFailure;
 

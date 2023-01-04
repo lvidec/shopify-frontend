@@ -6,9 +6,7 @@ const Navigation: React.FC = () => {
   return (
     <nav className="nav-container">
       <div className="nav-left">
-        <div className="link link-important">
-          Shopify
-        </div>
+        <div className="link link-important">Shopify</div>
         <Link className="link" aria-current="page" to={ROUTES.HOME}>
           Home
         </Link>

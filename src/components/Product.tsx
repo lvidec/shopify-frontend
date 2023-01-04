@@ -45,7 +45,8 @@ const Product = ({ product, onDelete, hasAddToCart }: ProductProps) => {
           className="button"
           to={ROUTES.HOME}
           onClick={() =>
-            onDelete && onDelete(product.id, getTypeFromProduct(product), productContext, setProductContext)
+            onDelete &&
+            onDelete(product.id, getTypeFromProduct(product), productContext, setProductContext)
           }
         >
           <i className="fa fa-trash-o"></i> &nbsp; Delete

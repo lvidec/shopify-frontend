@@ -1,20 +1,24 @@
-import { destroyLocalClothing, destroyLocalShoes, destroyToken, destroyUser, getUser } from "./StorageService"
+import {
+  destroyLocalClothing,
+  destroyLocalShoes,
+  destroyToken,
+  destroyUser,
+  getUser,
+} from "./StorageService";
 
 const logout = () => {
-    destroyToken();
-    destroyUser();
-    destroyLocalClothing();
-    destroyLocalShoes();
+  destroyToken();
+  destroyUser();
+  destroyLocalClothing();
+  destroyLocalShoes();
 };
 
+const isAuthenticated = (): boolean => {
+  return JSON.parse(getUser()).auth ? true : false;
+};
 
-const isAuthenticated = (): boolean =>{
-    return JSON.parse(getUser()).auth ? true : false;
-}
+const isAdmin = (): boolean => {
+  return JSON.parse(getUser()).auth === "ADMIN" ? true : false;
+};
 
-const isAdmin = (): boolean =>{
-    return JSON.parse(getUser()).auth === 'ADMIN' ? true : false;
-}
-
-
-export { logout, isAuthenticated, isAdmin }
+export { logout, isAuthenticated, isAdmin };

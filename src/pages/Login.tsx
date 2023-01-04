@@ -33,28 +33,27 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    
+
     try {
       const resToken = await axios.post(PROXY + "/api/authenticate", {
         username,
         password,
       });
-      
+
       userAuthentication = resToken.data;
-      
+
       const userito = jwtDecode(userAuthentication.jwtToken.token);
-      
+
       console.log(userito);
-      
+
       setTokenLocal(userAuthentication.jwtToken.token);
       setUserLocal(userito);
-      
-      
+
       // fetchAuthenticate(username, password);
       // dispatch(fetchAuthenticate(username, password));
       // if (authenticate.user && authenticate.user.sub === username){
-        //   history.push("/user-dashboard");
-        // }
+      //   history.push("/user-dashboard");
+      // }
     } catch (err) {
       if (errorMessage.current) {
         errorMessage.current.style.display = "inline";
@@ -88,7 +87,7 @@ const Login = () => {
         <img
           src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-login-form/img1.jpg"
           alt="login form"
-          />
+        />
         <div className="login-info-container">
           <div className="login-info">
             <div className="title">

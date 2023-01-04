@@ -17,9 +17,7 @@ const Pagination = () => {
     <nav className="pagination">
       {pageNumbers.map((number, index) => (
         <li key={index}>
-          <Link to={`/page-${number}`}>
-            {number}
-          </Link>
+          <Link to={`/page-${number}`}>{number}</Link>
         </li>
       ))}
     </nav>

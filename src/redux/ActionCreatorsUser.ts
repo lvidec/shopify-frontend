@@ -56,31 +56,31 @@ export const fetchAuthenticate = (username: string, password: string) => {
           payload: error.message,
         });
       });
-// try{
-//     const resToken = await axios.post(PROXY + "/api/authenticate", { username, password });
-  
-//     const userAuthentication = resToken.data;
-    
-//     const userito = jwtDecode(userAuthentication.jwtToken.token);
-    
-//     console.log(userito)
-    
-//     setTokenLocal(userAuthentication.jwtToken.token);
-//     setUserLocal(userito);
-    
-//     // history.push('/user-dashboard');
+    // try{
+    //     const resToken = await axios.post(PROXY + "/api/authenticate", { username, password });
 
-//     dispatch({
-//       type: ActionType.AUTHENTICATE_SUCCESS,
-//       payload: userito
-//     });
-//   }catch(error: any){
-//     console.log('error ', error);
-//     dispatch({
-//       type: ActionType.AUTHENTICATE_FAILURE,
-//       payload: error.message
-//     })
-//   }
+    //     const userAuthentication = resToken.data;
+
+    //     const userito = jwtDecode(userAuthentication.jwtToken.token);
+
+    //     console.log(userito)
+
+    //     setTokenLocal(userAuthentication.jwtToken.token);
+    //     setUserLocal(userito);
+
+    //     // history.push('/user-dashboard');
+
+    //     dispatch({
+    //       type: ActionType.AUTHENTICATE_SUCCESS,
+    //       payload: userito
+    //     });
+    //   }catch(error: any){
+    //     console.log('error ', error);
+    //     dispatch({
+    //       type: ActionType.AUTHENTICATE_FAILURE,
+    //       payload: error.message
+    //     })
+    //   }
   };
 };
 

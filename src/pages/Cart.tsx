@@ -29,7 +29,9 @@ const Cart = ({ products }: CartProps) => {
   let filteredClothing: Clothing[] | undefined;
   if (getLocalClothing().length) {
     filteredClothing = products.filter(isClothing);
-    filteredClothing = filteredClothing?.filter((clothes) => getLocalClothing().includes(clothes.id));
+    filteredClothing = filteredClothing?.filter((clothes) =>
+      getLocalClothing().includes(clothes.id)
+    );
   }
 
   let filteredShoes: Shoes[] | undefined;
