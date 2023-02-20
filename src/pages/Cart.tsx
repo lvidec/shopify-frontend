@@ -69,7 +69,7 @@ const Cart = ({ products }: CartProps) => {
     return <h2 className="empty-cart">Empty Cart</h2>;
   } else
     return (
-      <div className="margin-top-center">
+      <div className="cart-container">
         <h2>
           Total price: <span>$ {totalPriceClothing + totalPriceShoes}</span>
         </h2>

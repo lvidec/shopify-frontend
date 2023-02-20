@@ -34,7 +34,7 @@ const Filters = () => {
   };
 
   return (
-    <div className="filters-container">
+    <section className="filters-container">
       <div className="filter-title">
         <a href="/#" onClick={dropdownAnimation}>
           Category &nbsp;
@@ -53,7 +53,7 @@ const Filters = () => {
           ))}
         <br />
       </div>
-    </div>
+    </section>
   );
 };
 

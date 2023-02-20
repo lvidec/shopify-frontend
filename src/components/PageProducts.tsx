@@ -33,10 +33,8 @@ const PageProducts = ({ match }: any) => {
   else
     return (
       <>
-        <div className="margin-top-center">
-          <Pagination />
-        </div>
-        <section className="products">
+        <Pagination />
+        <main className="products">
           {paginatedProducts.map((product: Clothing | Shoes) => (
             <Product
               key={product.id}
@@ -45,7 +43,7 @@ const PageProducts = ({ match }: any) => {
               onDelete={deleteProductByIdAndType}
             />
           ))}
-        </section>
+        </main>
       </>
     );
 };

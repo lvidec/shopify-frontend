@@ -26,7 +26,7 @@ const CategoryProducts = ({ match }: MatchProps) => {
   if (productContext.length < 1) return <Redirect to={ROUTES.HOME} />;
   else
     return (
-      <div className="products margin-top-center">
+      <main className="products">
         {filteredProducts.map((product: Clothing | Shoes) => (
           <Product
             key={product.id}
@@ -35,7 +35,7 @@ const CategoryProducts = ({ match }: MatchProps) => {
             onDelete={deleteProductByIdAndType}
           />
         ))}
-      </div>
+      </main>
     );
 };
 

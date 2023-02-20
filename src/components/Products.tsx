@@ -11,7 +11,7 @@ const Products = ({ search }: { search: string }) => {
   const { productContext } = useContext<ProductContextTypes>(ProductContextDefault);
 
   return (
-    <div className="products">
+    <main className="products">
       {search
         ? productContext &&
           productContext
@@ -33,7 +33,7 @@ const Products = ({ search }: { search: string }) => {
               hasAddToCart={true}
             />
           ))}
-    </div>
+    </main>
   );
 };
 

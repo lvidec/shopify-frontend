@@ -37,7 +37,9 @@ li {
 
 .nav-container {
   z-index: 20;
-  position: fixed;
+  position: sticky;
+  top: 0;
+  left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -115,17 +117,15 @@ li {
 }
 
 .home-container {
-  margin: 0 1em;
+  margin: 1.5em 1em;
   overflow: hidden;
 
   .search-bar {
     border-radius: .35em;
     border-width: 1px;
-    margin-top: 6em;
   }
 
   .products-container {
-    margin-bottom: 2em;
     display: flex;
     flex-wrap: wrap;
 
@@ -378,7 +378,7 @@ li {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  padding-bottom: 4em;
+  padding-bottom: 5em;
   gap: 1em;
 
   .product-card {
@@ -507,8 +507,12 @@ li {
   color: $transparent-red-color;
 }
 
+.cart-container {
+  text-align: center;
+}
+
 .pagination {
-  margin: 1em 0;
+  margin: 2em 0;
   flex-basis: 100%;
   text-align: center;
   display: flex;
@@ -534,12 +538,6 @@ footer {
   background-color: $nav-color;
 }
 
-// IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-
-.margin-top-center {
-  margin-top: 1.5em;
-  text-align: center;
-}
 
 // MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 
@@ -607,11 +605,6 @@ footer {
       flex-basis: 30%;
     }
   }
-
-  .margin-top-center {
-    margin-top: 5.5em;
-    text-align: center;
-  }
 }
 
 @media (min-width: $large-size) {
@@ -631,6 +624,7 @@ footer {
     .card-container {
       .login-info-container {
         font-size: 2em;
+        border-radius: 0 1em 1em 0;
       }
     }
   }
